@@ -10,7 +10,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
         FileUploadConfiguration.class
 })
 public class BibtexToRdfApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(BibtexToRdfApplication.class, args);
     }
