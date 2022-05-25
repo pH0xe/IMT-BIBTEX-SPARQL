@@ -52,7 +52,7 @@ public class ConverterService {
         Path bibFile = saveOnDisk(file);
 
         ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar",
-                "bibtex2rdf.jar", bibFile.toString(),
+                "bibtex2rdf.jar", "-enc", "UTF-8", bibFile.toString(),
                 pathStr + "/bib.rdf");
 
         System.out.println("Start process");

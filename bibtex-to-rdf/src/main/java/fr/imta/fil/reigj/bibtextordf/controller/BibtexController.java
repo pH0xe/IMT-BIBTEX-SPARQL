@@ -33,8 +33,7 @@ public class BibtexController {
         }
 
         converterService.convertToRDF(file);
-        // BibFile newFile = this.bibFileService.save(file);
-        BibFile newFile = new BibFile();
+        BibFile newFile = this.bibFileService.save(file);
         if (newFile == null) {
             return ResponseEntity.internalServerError().body("Unable to upload File");
         }

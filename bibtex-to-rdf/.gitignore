@@ -34,3 +34,7 @@ build/
 
 ### Config ###
 .env
+
+### Fichier generé par bibtex2rdf ###
+**/*.log
+**/dataFiles
