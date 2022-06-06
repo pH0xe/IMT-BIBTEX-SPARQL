@@ -12,17 +12,18 @@ class RDFWriter:
 
     # Chaque entrée correspond à une réference bibliographique. Elle contient les entrées suivantes :
     # -
-    def writeEntry(self, id, type, authors, fields):
-        id = Literal(id)
-        self.graph.add((id, RDF.type, self.namespace[type]))
-        self.graph.add((id, self.namespace.hasAuthor, Literal(authors)))
+    def write_entry(self, entry_id, type, authors, fields):
+        entry_id = Literal(entry_id)
+        self.graph.add((entry_id, RDF.type, self.namespace[type]))
+        self.graph.add((entry_id, self.namespace.hasAuthor, Literal(authors)))
         for key, value in fields:
-            self.graph.add((id, self.namespace[getProperty(key)], Literal(value)))
+            self.graph.add((entry_id, self.namespace[getProperty(key)], Literal(value)))
         # self.graph.add((Literal(id), Literal('https://zeitkunst.org/bibtex/0.2/bibtex.owl/Article'), Literal(type)))
     
-    def printGraph(self):
+    def print_graph(self):
         print(self.namespace['Article'])
         print('\n')
         print(self.graph.serialize(format='pretty-xml'))
-    def saveGraph(self):
+        
+    def save_graph(self):
         self.graph.serialize(destination='rdfOut/lib.rdf', format='pretty-xml')

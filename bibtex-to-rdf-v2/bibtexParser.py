@@ -1,36 +1,59 @@
+from ast import Raise
 import logging
 import sys
-from pybtex.database import parse_file
+from pybtex.database import parse_file, parse_bytes
 from pybtex.database.input.bibtex import UndefinedMacro, DuplicateField
 
 from RDFWriter import RDFWriter
 
-
+error_string = "Unexpected error: {0}"
 class BibtexParser:
-    def __init__(self, filename) -> None:
+    def __init__(self) -> None:
+        self.bibdata = None
+        self.writer = None
+        
+
+    def parse_file(self, filename: str = None, file: bytes = None) -> tuple[bool, str]:
         try:
-            self.bibdata = parse_file(filename)
+            if filename is not None:
+                self.bibdata = parse_file(filename, 'bibtex')
+            elif file is not None:
+                self.bibdata = parse_bytes(file, 'bibtex')
+            else:
+                return False, "No file provided"
             self.writer = RDFWriter()
+            return True, "File parsed successfully"
         except UndefinedMacro as e:
             logging.error('Undefined Macro: {0}'.format(e))
-            exit(-1)
+            return False, 'Undefined Macro: {0}'.format(e)
         except DuplicateField as e:
             logging.error('Duplicate field: {0}'.format(e))
-            exit(-1)
-        except:
-            logging.error("Unexpected error:", sys.exc_info()[0])
-            exit(-1)
+            return False, 'Duplicate field: {0}'.format(e)
+        except Exception as e:
+            logging.error(error_string.format(e))
+            return False, error_string.format(e)
 
-    def exploreFile(self):
-        for key in self.bibdata.entries.keys():
-            item = self.bibdata.entries[key]
-            type = self.extract_type(item)
-            fields = self.extract_fields(item)
-            authors = self.extract_persons(item)
-            self.writer.writeEntry(key, type, authors, fields)
+    def convert_file(self) -> tuple[bool, str]:
+        try: 
+            for key in self.bibdata.entries.keys():
+                item = self.bibdata.entries[key]
+                item_type = self.extract_type(item)
+                fields = self.extract_fields(item)
+                authors = self.extract_persons(item)
+                self.writer.write_entry(key, item_type, authors, fields)
+        except Exception as e:
+            logging.error(error_string.format(e))
+            return False, error_string.format(e)
+        return True, "File converted successfully"
 
-    def writeRDF(self):
-        self.writer.writeRDF()
+    def save_rdf(self) -> tuple[bool, str]:
+        try:
+            self.writer.save_graph()
+        except Exception as e:
+            logging.error(error_string.format(e))
+            return False, error_string.format(e)
+        return True, "RDF saved successfully"
+        
 
     def extract_type(self, entry):
         return entry.type
