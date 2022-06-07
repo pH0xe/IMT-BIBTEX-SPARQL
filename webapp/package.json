@@ -8,9 +8,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mdi/font": "^6.7.96",
     "@typescript-eslint/eslint-plugin": "^5.26.0",
     "@typescript-eslint/parser": "^5.26.0",
     "axios": "^0.27.2",
+    "bulma": "^0.9.4",
     "eslint": "^8.16.0",
     "eslint-plugin-vue": "^9.0.1",
     "vite-plugin-checker": "^0.4.6",

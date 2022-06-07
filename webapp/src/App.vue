@@ -3,23 +3,23 @@ import AppHeader from "./components/AppHeader.vue";
 </script>
 
 <template>
-	<div class="container">
+	<div class="main">
 		<AppHeader />
 		<router-view />
 	</div>
 </template>
 
 <style>
-/* @import "bulma/css/bulma.css"; */
+@import "bulma/css/bulma.css";
+@import "@mdi/font/css/materialdesignicons.css";
 
 #app {
 	font-family: Avenir, Helvetica, Arial, sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	text-align: center;
 	color: #2c3e50;
 }
-.container {
+.main {
 	height: 100vh;
 	display: flex;
 	flex-direction: column;
