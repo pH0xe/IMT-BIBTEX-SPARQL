@@ -5,6 +5,9 @@ import os
 from psycopg2 import OperationalError
 from psycopg2.extras import RealDictCursor
 from werkzeug.utils import secure_filename
+from typing import Union
+
+from HttpMessage import OPERATIONAL_ERROR, UNEXPECTED_ERROR
 
 
 class DataBaseManager:
@@ -24,10 +27,10 @@ class DataBaseManager:
             self.cursor = self.db.cursor(cursor_factory=RealDictCursor)
             return True
         except OperationalError as e:
-            print("Operational error: " + str(e))
+            logging.ERROR(OPERATIONAL_ERROR.format(e))
             return False
         except Exception as e:
-            print("error a ala connexion")
+            logging.ERROR(UNEXPECTED_ERROR.format(e))
             return False
 
     def select_all_file(self) -> list[tuple]:
@@ -41,14 +44,15 @@ class DataBaseManager:
             contenttype = file.mimetype
             data = file.read()
             size = len(data)
-            self.cursor.execute("INSERT INTO bibfile (uploaddate, name, size, contenttype, data) VALUES (%s, %s, %s, %s, %s)", (upload_date, filename, size, contenttype,  data))
+            req = 'INSERT INTO bibfile (uploaddate, name, size, contenttype, data) VALUES ({0}, {1}, {2}, {3}, {4})'
+            self.cursor.execute(req.format(upload_date, filename, size, contenttype,  data))
             self.db.commit()
             return True, data
         except Exception as e:
             logging.ERROR(e)
             return False, None
 
-    def get_data_by_id(self, id) -> bytes | None:
+    def get_data_by_id(self, id) -> Union[bytes, None]:
         self.cursor.execute("select data from bibfile where id = {0}".format(id))
         result_set = self.cursor.fetchone()
         if result_set is not None:

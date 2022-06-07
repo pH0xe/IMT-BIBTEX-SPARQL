@@ -1,17 +1,15 @@
-from ast import Raise
 import logging
-import sys
 from pybtex.database import parse_file, parse_bytes
 from pybtex.database.input.bibtex import UndefinedMacro, DuplicateField
-
+from HttpMessage import DUPLICATED_FIELD, NO_FILE_SELECTED, SUCCESS_CONVERT, SUCCESS_PARSE, SUCCESS_SAVE, UNDEFINED_MACRO, UNEXPECTED_ERROR
 from RDFWriter import RDFWriter
 
-error_string = "Unexpected error: {0}"
+
 class BibtexParser:
     def __init__(self) -> None:
         self.bibdata = None
         self.writer = None
-        
+
 
     def parse_file(self, filename: str = None, file: bytes = None) -> tuple[bool, str]:
         try:
@@ -20,39 +18,41 @@ class BibtexParser:
             elif file is not None:
                 self.bibdata = parse_bytes(file, 'bibtex')
             else:
-                return False, "No file provided"
+                return False, NO_FILE_SELECTED
             self.writer = RDFWriter()
-            return True, "File parsed successfully"
+            return True, SUCCESS_PARSE
         except UndefinedMacro as e:
-            logging.error('Undefined Macro: {0}'.format(e))
-            return False, 'Undefined Macro: {0}'.format(e)
+            logging.error(UNDEFINED_MACRO.format(e))
+            return False, UNDEFINED_MACRO.format(e)
         except DuplicateField as e:
-            logging.error('Duplicate field: {0}'.format(e))
-            return False, 'Duplicate field: {0}'.format(e)
+            logging.error(DUPLICATED_FIELD.format(e))
+            return False, DUPLICATED_FIELD.format(e)
         except Exception as e:
-            logging.error(error_string.format(e))
-            return False, error_string.format(e)
+            logging.error(UNEXPECTED_ERROR.format(e))
+            return False, UNEXPECTED_ERROR.format(e)
 
-    def convert_file(self) -> tuple[bool, str]:
-        try: 
+    def convert_file(self) -> tuple[bool, str, list[str]]:
+        errors = []
+        try:      
             for key in self.bibdata.entries.keys():
                 item = self.bibdata.entries[key]
                 item_type = self.extract_type(item)
                 fields = self.extract_fields(item)
                 authors = self.extract_persons(item)
-                self.writer.write_entry(key, item_type, authors, fields)
+                err = self.writer.write_entry(key, item_type, authors, fields)
+                errors.extend(err)
         except Exception as e:
-            logging.error(error_string.format(e))
-            return False, error_string.format(e)
-        return True, "File converted successfully"
+            logging.error(UNEXPECTED_ERROR.format(e))
+            return False, UNEXPECTED_ERROR.format(e), errors
+        return True, SUCCESS_CONVERT, errors
 
     def save_rdf(self) -> tuple[bool, str]:
         try:
             self.writer.save_graph()
         except Exception as e:
-            logging.error(error_string.format(e))
-            return False, error_string.format(e)
-        return True, "RDF saved successfully"
+            logging.error(UNEXPECTED_ERROR.format(e))
+            return False, UNEXPECTED_ERROR.format(e)
+        return True, SUCCESS_SAVE
         
 
     def extract_type(self, entry):

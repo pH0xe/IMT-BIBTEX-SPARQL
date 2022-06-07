@@ -1,17 +1,21 @@
 import logging
 
+from HttpMessage import PROPERTY_NOT_FOUND
+
 
 properties = {
     'abstract': 'hasAbstract',
     'address': 'hasAddress',
-    '': 'hasAffiliation',
+    'affiliation': 'hasAffiliation',
     'annote': 'hasAnnotation',
-    '': 'hasAuthor',
+    'author': 'hasAuthor',
     'booktitle': 'hasBooktitle',
     'book': 'hasBooktitle',
     'chapter': 'hasChapter',
-    '': 'hasContents',
-    '': 'hasCopyright',
+    'content': 'hasContents',
+    'contents': 'hasContents',
+    'copyright': 'hasCopyright',
+    'copyrights': 'hasCopyright',
     'crossref': 'hasCrossref',
     'edition': 'hasEdition',
     'editors': 'hasEditor',
@@ -22,29 +26,29 @@ properties = {
     'key': 'hasKey',
     'keywords': 'hasKeywords',
     'keyword': 'hasKeywords',
-    '': 'hasLanguage',
-    '': 'hasLCCN',
+    'language': 'hasLanguage',
+    'lccn': 'hasLCCN',
     'location': 'hasLocation',
     'month': 'hasMonth',
-    '': 'hasMrnumber',
+    'mrnumber': 'hasMrnumber',
     'note': 'hasNote',
     'notes': 'hasNote',
     'number': 'hasNumber',
     'organization': 'hasOrganization',
     'pages': 'hasPages',
     'numpages': 'hasPages',
-    '': 'hasPrice',
+    'price': 'hasPrice',
     'publisher': 'hasPublisher',
     'school': 'hasSchool',
     'series': 'hasSeries',
-    '': 'hasSize',
+    'size': 'hasSize',
     'title': 'hasTitle',
     'type': 'hasType',
     'url': 'hasURL',
     'volume': 'hasVolume',
     'year': 'hasYear',
     'howpublished': 'howPublished',
-    '': 'pageChapterData',
+    'pagechapterdata': 'pageChapterData',
     # Illegal not in definition
     'folder': 'hasFolder',
     'doiurl': 'hasDoiURL',
@@ -75,10 +79,10 @@ properties = {
     'urlspringer': 'hasURLSpringer',
 }
 
-def getProperty(name):
+def get_property(name) -> tuple[bool, str]:
     name = name.lower()
     try:
-        return properties[name]
+        return True, properties[name]
     except KeyError:
-        logging.error('Property not found: ' + name)
-        return name
+        logging.warning(PROPERTY_NOT_FOUND.format(name))
+        return False, name

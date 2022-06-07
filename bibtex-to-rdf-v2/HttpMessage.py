@@ -1,0 +1,15 @@
+NO_FILE_PART = 'No file part in the request'
+NO_FILE_SELECTED = 'No file selected for uploading'
+CANNOT_CONNECT_TO_DATABASE = 'Could not connect to database'
+FILE_NOT_UPLOADED = 'Could not upload file'
+
+UNEXPECTED_ERROR = 'Unexpected error: {0}'
+UNDEFINED_MACRO = 'Undefined Macro: {0}'
+DUPLICATED_FIELD = 'Duplicate field: {0}'
+OPERATIONAL_ERROR = 'Operational error: {0}'
+PROPERTY_NOT_FOUND = 'Property not found: {0}'
+
+SUCCESS_UPLOAD  = 'File uploaded successfully'
+SUCCESS_SAVE = 'RDF saved successfully'
+SUCCESS_CONVERT = 'File converted successfully'
+SUCCESS_PARSE = 'File parsed successfully'
