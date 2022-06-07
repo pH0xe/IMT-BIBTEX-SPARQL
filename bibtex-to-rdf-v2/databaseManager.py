@@ -14,6 +14,7 @@ class DataBaseManager:
     def __init__(self):
         self.db = None
         self.cursor = None
+        self.logger = logging.getLogger('bibtexToRDF')
     
     def connect_to_postgres(self) -> bool:
         try:
@@ -27,10 +28,10 @@ class DataBaseManager:
             self.cursor = self.db.cursor(cursor_factory=RealDictCursor)
             return True
         except OperationalError as e:
-            logging.ERROR(OPERATIONAL_ERROR.format(e))
+            self.logger.error(OPERATIONAL_ERROR.format(e))
             return False
         except Exception as e:
-            logging.ERROR(UNEXPECTED_ERROR.format(e))
+            self.logger.error(UNEXPECTED_ERROR.format(e))
             return False
 
     def select_all_file(self) -> list[tuple]:
@@ -49,7 +50,7 @@ class DataBaseManager:
             self.db.commit()
             return True, data
         except Exception as e:
-            logging.ERROR(e)
+            self.logger.error(e)
             return False, None
 
     def get_data_by_id(self, id) -> Union[bytes, None]:

@@ -5,10 +5,12 @@ from HttpMessage import DUPLICATED_FIELD, NO_FILE_SELECTED, SUCCESS_CONVERT, SUC
 from RDFWriter import RDFWriter
 
 
+
 class BibtexParser:
     def __init__(self) -> None:
         self.bibdata = None
         self.writer = None
+        self.logger = logging.getLogger("bibtexToRDF")
 
 
     def parse_file(self, filename: str = None, file: bytes = None) -> tuple[bool, str]:
@@ -22,13 +24,13 @@ class BibtexParser:
             self.writer = RDFWriter()
             return True, SUCCESS_PARSE
         except UndefinedMacro as e:
-            logging.error(UNDEFINED_MACRO.format(e))
+            self.logger.error(UNDEFINED_MACRO.format(e))
             return False, UNDEFINED_MACRO.format(e)
         except DuplicateField as e:
-            logging.error(DUPLICATED_FIELD.format(e))
+            self.logger.error(DUPLICATED_FIELD.format(e))
             return False, DUPLICATED_FIELD.format(e)
         except Exception as e:
-            logging.error(UNEXPECTED_ERROR.format(e))
+            self.logger.error(UNEXPECTED_ERROR.format(e))
             return False, UNEXPECTED_ERROR.format(e)
 
     def convert_file(self) -> tuple[bool, str, list[str]]:
@@ -42,7 +44,7 @@ class BibtexParser:
                 err = self.writer.write_entry(key, item_type, authors, fields)
                 errors.extend(err)
         except Exception as e:
-            logging.error(UNEXPECTED_ERROR.format(e))
+            self.logger.error(UNEXPECTED_ERROR.format(e))
             return False, UNEXPECTED_ERROR.format(e), errors
         return True, SUCCESS_CONVERT, errors
 
@@ -50,7 +52,7 @@ class BibtexParser:
         try:
             self.writer.save_graph()
         except Exception as e:
-            logging.error(UNEXPECTED_ERROR.format(e))
+            self.logger.error(UNEXPECTED_ERROR.format(e))
             return False, UNEXPECTED_ERROR.format(e)
         return True, SUCCESS_SAVE
         

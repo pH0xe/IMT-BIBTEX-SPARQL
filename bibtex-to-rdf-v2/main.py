@@ -10,6 +10,8 @@ from databaseManager import DataBaseManager
 from HttpMessage import CANNOT_CONNECT_TO_DATABASE, FILE_NOT_UPLOADED, NO_FILE_SELECTED, NO_FILE_PART, SUCCESS_UPLOAD
 
 DEBUG = True
+logLevel = logging.DEBUG if DEBUG else logging.ERROR
+logger = None
 
 load_dotenv()
 app = Flask("BibFileAPI")
@@ -64,12 +66,21 @@ def convert_process(data: bytes):
     return jsonify({'message': SUCCESS_UPLOAD, 'warnings': errors}), 200
 
 def return_error(msg, code, method=None):
-    logging.error(f'{msg} {method}')
+    logger.error(f'{msg} {method}')
     return jsonify({'message': msg}), code
 
 if __name__ == "__main__":
-    logging.basicConfig(encoding='utf-8', level=logging.DEBUG, handlers=[ 
-        logging.StreamHandler(), 
-        logging.FileHandler('logs/log-'+ str(int(time.time())) + '.log') 
-    ])
+    # Flask logger configuration
+    logging.getLogger("werkzeug").setLevel(logLevel)
+    # API logger configuration
+    logger = logging.getLogger("bibtexToRDF")
+    filehandler = logging.FileHandler('logs/log-'+ str(int(time.time())) + '.log')
+    streamhandler = logging.StreamHandler()
+    formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(module)s:%(message)s')
+    streamhandler.setFormatter(formatter)
+    filehandler.setFormatter(formatter)
+    logger.setLevel(logLevel)
+    logger.addHandler(filehandler)
+    logger.addHandler(streamhandler)
+    logger.info('Starting API')
     app.run(host=os.environ.get('FLASK_HOST'), port=os.environ.get('FLASK_PORT'), debug=DEBUG)

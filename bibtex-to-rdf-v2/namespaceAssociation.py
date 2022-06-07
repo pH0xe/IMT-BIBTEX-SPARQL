@@ -2,7 +2,6 @@ import logging
 
 from HttpMessage import PROPERTY_NOT_FOUND
 
-
 properties = {
     'abstract': 'hasAbstract',
     'address': 'hasAddress',
@@ -79,10 +78,12 @@ properties = {
     'urlspringer': 'hasURLSpringer',
 }
 
+logger = logging.getLogger('bibtexToRDF')
+
 def get_property(name) -> tuple[bool, str]:
     name = name.lower()
     try:
         return True, properties[name]
     except KeyError:
-        logging.warning(PROPERTY_NOT_FOUND.format(name))
+        logger.warning(PROPERTY_NOT_FOUND.format(name))
         return False, name
