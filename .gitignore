@@ -1,2 +1,4 @@
 data-files/*
 .env
+**/*.bib
+**/*.rdf
