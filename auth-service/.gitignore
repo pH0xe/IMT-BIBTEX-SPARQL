@@ -1,4 +1,8 @@
 venv
 .env
-.vscode
 __pycache__
+.pytest_cache
+.vscode/*
+
+# include launch configurations
+!.vscode/launch.json

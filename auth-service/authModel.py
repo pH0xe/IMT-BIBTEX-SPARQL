@@ -2,7 +2,7 @@ from databaseManager import DatabaseManager
 from jwtHandler import generate_jwt_token
 
 
-def register(username, password):
+def register(username, password) -> tuple[str, str]:
     token = None
     database_manager = DatabaseManager()
     success, message = database_manager.hash_and_register_user(username, password)
@@ -14,7 +14,7 @@ def register(username, password):
     # return none if User can't register
     return token, message
 
-def login(username, password):
+def login(username, password) -> str:
     token = None
     database_manager = DatabaseManager()
     valid, is_admin = database_manager.check_password_in_database(username, password)
