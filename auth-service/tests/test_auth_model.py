@@ -19,6 +19,5 @@ class TestAuthModel():
         mock_db.return_value.hash_and_register_user.return_value = register_success, register_msg
         mock_token.return_value = "token"
         token, msg = register("test", "test")
-        print(token, msg)
         assert token == expected_token
         assert msg == expected_msg

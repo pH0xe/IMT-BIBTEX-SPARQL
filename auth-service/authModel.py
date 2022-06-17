@@ -1,8 +1,9 @@
+from typing import Tuple
 from databaseManager import DatabaseManager
 from jwtHandler import generate_jwt_token
 
 
-def register(username, password) -> tuple[str, str]:
+def register(username, password) -> Tuple[str, str]:
     token = None
     database_manager = DatabaseManager()
     success, message = database_manager.hash_and_register_user(username, password)

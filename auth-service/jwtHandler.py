@@ -1,4 +1,3 @@
-import string
 import time
 import jwt
 import os
@@ -6,7 +5,7 @@ import os
 
 
 
-def generate_jwt_token(username, is_admin) -> string:
+def generate_jwt_token(username, is_admin) -> str:
     payload_data = {
         "username": username,
         "isAdmin": is_admin,
