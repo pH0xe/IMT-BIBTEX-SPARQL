@@ -23,6 +23,7 @@ def login_endpoint():
 
 @app.route("/api/register", methods=["POST"])
 def register_endpoint():
+    # TODO: check if current user is logged in
     password = request.form.get("password")
     login_user = request.form.get("login")
     if login_user is not None and password is not None:
