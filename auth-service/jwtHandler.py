@@ -18,7 +18,7 @@ def generate_jwt_token(username, is_admin) -> str:
 
 def verify_jwt_token(token: str) -> Tuple[bool, dict]:
     try:
-        return False, jwt.decode(token, os.environ.get('AUTHSECRET'), algorithm="HS256")
+        return False, jwt.decode(token, os.environ.get('AUTHSECRET'), algorithms=["HS256"])
     except jwt.ExpiredSignatureError:
         return True, {"error": "Token expired"}
     except Exception as e:
