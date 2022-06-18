@@ -13,7 +13,7 @@ load_dotenv()
 app = Flask("auth-api")
 CORS(app)
 
-@app.route("/api/login", methods=["POST"])
+@app.route("/api/auth/login", methods=["POST"])
 def login_endpoint():
     password = request.form.get("password")
     login_user = request.form.get("login")
@@ -25,7 +25,7 @@ def login_endpoint():
             return jsonify({"error": "Wrong password or username"}), 400      
     return jsonify({"error": "Missing parameters"}), 400
 
-@app.route("/api/register", methods=["POST"])
+@app.route("/api/auth/register", methods=["POST"])
 def register_endpoint():
     auth_token = request.headers.get("Authorization")
     print('auth_token', auth_token)
