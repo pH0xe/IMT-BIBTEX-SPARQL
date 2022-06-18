@@ -27,7 +27,8 @@ def login_endpoint():
 
 @app.route("/api/register", methods=["POST"])
 def register_endpoint():
-    auth_token = request.headers.get("authorization")
+    auth_token = request.headers.get("Authorization")
+    print('auth_token', auth_token)
     if auth_token is not None:
         error, payload = verify_jwt_token(auth_token)
         if error :
