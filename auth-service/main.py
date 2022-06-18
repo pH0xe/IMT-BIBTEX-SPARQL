@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import os
 
 from authModel import login, register
+from jwtHandler import verify_jwt_token
 
 DEBUG = True
 
@@ -23,7 +24,14 @@ def login_endpoint():
 
 @app.route("/api/register", methods=["POST"])
 def register_endpoint():
-    # TODO: check if current user is logged in
+    auth_token = request.headers.get("authorization")
+    if auth_token is not None:
+        error, payload = verify_jwt_token(auth_token)
+        if error :
+            return jsonify(payload), 401
+    else:
+        return jsonify({"error": "Missing authentification token"}), 401
+
     password = request.form.get("password")
     login_user = request.form.get("login")
     if login_user is not None and password is not None:

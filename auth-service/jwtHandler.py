@@ -1,4 +1,5 @@
 import time
+from typing import Tuple
 import jwt
 import os
 
@@ -14,3 +15,12 @@ def generate_jwt_token(username, is_admin) -> str:
         "nbf": int(time.time()) - 10,
     }
     return jwt.encode(payload_data, os.environ.get('AUTHSECRET'), algorithm="HS256")
+
+def verify_jwt_token(token: str) -> Tuple[bool, dict]:
+    try:
+        return False, jwt.decode(token, os.environ.get('AUTHSECRET'), algorithm="HS256")
+    except jwt.ExpiredSignatureError:
+        return True, {"error": "Token expired"}
+    except Exception as e:
+        return True, {"error": f"Unable to decode token : {e}"}
+    
