@@ -45,8 +45,8 @@ class DataBaseManager:
             contenttype = file.mimetype
             data = file.read()
             size = len(data)
-            req = "INSERT INTO bibfile (uploaddate, name, size, contenttype, data) VALUES ({0}, '{1}', {2}, '{3}', {4})"
-            self.cursor.execute(req.format(upload_date, filename, size, contenttype, psycopg2.Binary(data)))
+            req = f'INSERT INTO bibfile (uploaddate, name, size, contenttype, data) VALUES ({upload_date}, \'{filename}\', {size}, \'{contenttype}\', {psycopg2.Binary(data)})'
+            self.cursor.execute(req)
             return True, data
         except Exception as e:
             self.logger.error(e)
