@@ -1,0 +1,6 @@
+venv
+__pycache__
+
+# Don't ignore launch file
+.vscode/*
+!.vscode/launch.json

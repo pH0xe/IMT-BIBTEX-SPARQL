@@ -1,0 +1,5 @@
+paths:
+  - path: api/auth
+    server: http://localhost:8082/
+  - path: api/bibtex
+    server: http://localhost:8081/
