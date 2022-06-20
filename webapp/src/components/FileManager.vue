@@ -46,6 +46,7 @@ getFiles();
 		</div>
 
 		<table v-if="items.length > 0" class="table container is-striped my-6">
+			<caption>Previous uploaded bibtex files</caption>
 			<thead>
 				<tr>
 					<th>
@@ -66,11 +67,11 @@ getFiles();
 						{{ new Date(item.uploadDate).toLocaleString("fr") }}
 					</td>
 					<td>
-						<!--<button class="button is-ghost">
+						<button class="button is-ghost">
 							<span class="icon">
 								<i class="mdi mdi-24px mdi-restore" />
 							</span>
-						</button>-->
+						</button>
 						<button @click="deleteFile(item.id)" class="button is-ghost has-text-danger">
 							<span class="icon">
 								<i class="mdi mdi-24px mdi-delete" />
