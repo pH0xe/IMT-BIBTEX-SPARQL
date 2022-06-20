@@ -9,7 +9,7 @@
     --color-highlight:#a0f0a0;
     --color-prehighlight:#f8f880;
     --color-selection:#f8f840;
-} 
+}
 */
 
 head, body, input, textarea, select {
@@ -425,8 +425,6 @@ input:checked + .slider:before {
 }
 
 /* Modification de l'interface, display: none des éléments non nécessaire */
-#permalink,
-#myNavbar,
-#hidden-header-navbar {
+#permalink {
     display: none !important;
 }

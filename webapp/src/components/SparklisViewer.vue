@@ -2,7 +2,7 @@
 </script>
 
 <template>
-	<iframe src="src/sparklis/webapp/osparklis.html" />
+	<iframe src="src/sparklis/osparklis.html" />
 </template>
 
 <style scoped>
