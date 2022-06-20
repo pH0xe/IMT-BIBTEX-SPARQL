@@ -1,14 +1,14 @@
 import logging
 import time
+from flask import Response, jsonify
 import psycopg2
 import os
 from psycopg2 import OperationalError
 from psycopg2.extras import RealDictCursor
 from werkzeug.utils import secure_filename
-from typing import Union
+from typing import Tuple, Union
 
 from HttpMessage import OPERATIONAL_ERROR, UNEXPECTED_ERROR
-
 
 class DataBaseManager:
     def __init__(self):
@@ -51,6 +51,16 @@ class DataBaseManager:
         except Exception as e:
             self.logger.error(e)
             return False, None
+
+    def delete_file(self, id: int) -> Tuple[Response, int]:
+        try:
+            req = f'delete from bibfile where id = {id}'
+            self.cursor.execute(req)
+            self.commit_upload()
+            return jsonify({'success': True}), 200
+        except Exception as e:
+            return jsonify({'success': False, 'error': str(e)}), 500
+
 
     def commit_upload(self):
         self.db.commit()
