@@ -10,7 +10,7 @@ async function getFiles(): Promise<void> {
 	items.value = [];
 	await axios.get('http://localhost:8081/api/bibtex')
 		.then((response) => response.data.forEach((item: any) => items.value.unshift(item)))
-		.catch((error) => hasError.value = true);
+		.catch(() => hasError.value = true);
 }
 
 async function postFile(event : Event & any): Promise<void> {
@@ -24,7 +24,7 @@ async function postFile(event : Event & any): Promise<void> {
 		}
 	})
 		.then(() => getFiles())
-		.catch((error) => hasError.value = true);
+		.catch(() => hasError.value = true);
 }
 
 async function deleteFile(id: number): Promise<void> {

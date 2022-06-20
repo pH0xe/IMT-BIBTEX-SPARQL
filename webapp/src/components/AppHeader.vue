@@ -31,7 +31,3 @@ const toggle: any = ref(true);
 		</nav>
 	</header>
 </template>
-
-
-<style scoped>
-</style>
