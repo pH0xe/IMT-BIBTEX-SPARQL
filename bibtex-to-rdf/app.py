@@ -4,6 +4,7 @@ import time
 from dotenv import load_dotenv
 
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 from bibtexParser import BibtexParser
 
 from databaseManager import DataBaseManager
@@ -15,6 +16,8 @@ logger = None
 
 load_dotenv()
 app = Flask("BibFileAPI")
+CORS(app)
+
 
 @app.route("/api/bibtex", methods=["POST"])
 def upload_file():
