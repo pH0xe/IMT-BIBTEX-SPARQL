@@ -2,6 +2,8 @@ from flask import Flask, jsonify, request
 from dotenv import load_dotenv
 import os
 
+from flask_cors import CORS
+
 from authModel import login, register
 from jwtHandler import verify_jwt_token
 
@@ -9,6 +11,7 @@ DEBUG = True
 
 load_dotenv()
 app = Flask("auth-api")
+CORS(app)
 
 @app.route("/api/login", methods=["POST"])
 def login_endpoint():
