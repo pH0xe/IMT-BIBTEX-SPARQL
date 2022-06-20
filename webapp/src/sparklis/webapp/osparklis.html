@@ -4,7 +4,7 @@
   This file is part of Sparklis.
   -->
 <!DOCTYPE html>
-<html>
+<html lang="fr-FR">
 <head>
 <title>Sparklis</title>
 <meta charset="UTF-8"/>
@@ -13,8 +13,8 @@
 <meta name="keywords" content="SPARQL, faceted search, semantic search, exploratory search, complex queries, natural language interface, logical information systems"/>
 
 <!-- Google Charts -->
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type="text/javascript">
+<script src="https://www.gstatic.com/charts/loader.js"></script>
+<script >
   google.charts.load('current', { 'packages': ['map'], mapsApiKey: 'AIzaSyC1lxqo51Ivm0BrOc0ogkOBUFjHcoczqNo' });
 </script>
 <!-- YASGUI -->
@@ -600,7 +600,7 @@
 	      <span class="texte lang-fr">Suggérer des <span class="naryURI">relations n-aires (triplets réifiés)</span> selon : </span>
 	      <span class="texte lang-es">Sugerir <span class="naryURI">relaciones n-arias (tripletas reificadas)</span> de acuerdo a: </span>
 	      <code title="http://www.irisa.fr/LIS/ferre/vocab/nary#subjectObject">nary:subjectObject</code>, <code title="http://www.irisa.fr/LIS/ferre/vocab/nary#eventObject">nary:eventObject</code>
-	      <span class="texte lang-nl"> Suggereer <span class="naryURI"> n-ary relaties (geconcretiseerde triples) </span> volgens:
+	      <span class="texte lang-nl"> Suggereer <span class="naryURI"> n-ary relaties (geconcretiseerde triples) </span> volgens:</span>
 	    </div>
 	  </li>
 	  <li class="list-group-item">
@@ -1115,15 +1115,15 @@
 
     <div class="btn-group btn-group-toggle" data-toggle="buttons">
       <label  id="button-sparklis-view" class="btn btn-default btn-md navbar-btn active">
-	<input type="radio" name="options" autocomplete="off" checked>
+	<input type="radio" name="options" checked>
 	Sparklis
       </label>
       <label  id="button-yasgui-view" class="btn btn-default btn-md navbar-btn">
-	<input type="radio" name="options" autocomplete="off">
+	<input type="radio" name="options">
 	YASGUI
       </label>
       <label  id="button-log-view" class="btn btn-default btn-md navbar-btn">
-	<input type="radio" name="options" autocomplete="off">
+	<input type="radio" name="options">
 	<span class="texte lang-en">History</span>
 	<span class="texte lang-fr">Historique</span>
 	<span class="texte lang-es">Historial</span>
@@ -1675,8 +1675,6 @@
     <div id="endpoint-log">
     </div>
   </div>
-</div>
-
 </div>
 
 </div>
