@@ -33,7 +33,7 @@ logger = init_logger()
 
 load_dotenv()
 app = Flask("BibFileAPI")
-# CORS(app)
+CORS(app)
 
 
 @app.route("/api/bibtex", methods=["POST"])
