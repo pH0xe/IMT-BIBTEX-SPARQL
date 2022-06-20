@@ -1,8 +1,12 @@
+from email import message
 import os
+import re
 from flask import Flask, Response, jsonify, redirect, request
 from dotenv import load_dotenv
 import requests
 import yaml
+
+from jwt import verify_jwt_token
 
 DEBUG = True
 
@@ -16,6 +20,14 @@ def path_router(path):
     print(request.get_data())
     for entry in config['paths']:
         if path.startswith(entry['path']):
+            if entry['auth']:
+                token = request.headers.get('Authorization')
+                if not token:
+                    return jsonify({"error": "No authorization header"}), 403
+                is_authentified, message = verify_jwt_token(token)
+                if not is_authentified:
+                    return jsonify({"error": message}), 403
+
             addr = f"{entry['server']}{path}"
             try:
                 resp = requests.request(
