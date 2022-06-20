@@ -11,7 +11,7 @@ services:
             - POSTGRES_PASSWORD=${POSTGRES_ADMIN_PASSWORD}
     sparql-endpoint:
         image: atomgraph/fuseki
-        command: --file /data/lib.rdf --update --auth=basic /library
+        command: --file /data/lib.rdf --update /library
         ports:
             - 3030:3030
         volumes:
