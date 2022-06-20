@@ -77,6 +77,14 @@ def get_all_files():
         return return_error(CANNOT_CONNECT_TO_DATABASE, 500, method)
     return jsonify(database_manager.select_all_file())
 
+@app.route('/api/bibtex/<id>', methods=['DELETE'])
+def delete_file_endpoint(id):
+    method = 'delete_file'
+    database_manager = DataBaseManager()
+    if not database_manager.connect_to_postgres():
+        return return_error(CANNOT_CONNECT_TO_DATABASE, 500, method)
+    return database_manager.delete_file(id)
+    
 def convert_process(data: bytes):
     method = 'convert_process'
     parser = BibtexParser()
