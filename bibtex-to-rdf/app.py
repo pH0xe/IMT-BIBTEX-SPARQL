@@ -10,9 +10,26 @@ from bibtexParser import BibtexParser
 from databaseManager import DataBaseManager
 from HttpMessage import CANNOT_CONNECT_TO_DATABASE, FILE_NOT_UPLOADED, NO_FILE_SELECTED, NO_FILE_PART, SUCCESS_UPLOAD
 
+def init_logger():
+    # Flask logger configuration
+    logging.getLogger("werkzeug").setLevel(logLevel)
+    # API logger configuration
+    logger = logging.getLogger("bibtexToRDF")
+    filehandler = logging.FileHandler('logs/log-'+ str(int(time.time())) + '.log')
+    streamhandler = logging.StreamHandler()
+    formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(module)s:%(message)s')
+    streamhandler.setFormatter(formatter)
+    filehandler.setFormatter(formatter)
+    logger.setLevel(logLevel)
+    logger.addHandler(filehandler)
+    logger.addHandler(streamhandler)
+    logger.info('Starting API')
+
+    return logger
+
 DEBUG = True
 logLevel = logging.DEBUG if DEBUG else logging.ERROR
-logger = None
+logger = init_logger()
 
 load_dotenv()
 app = Flask("BibFileAPI")
@@ -34,7 +51,13 @@ def upload_file():
     if not success:
         return return_error(FILE_NOT_UPLOADED, 500, method)
 
-    return convert_process(data)
+    message, code = convert_process(data)
+    if code == 200:
+        database_manager.commit_upload()
+    else:
+        database_manager.rollback_upload()
+
+    return message, code
 
 @app.route("/api/bibtex/<id>", methods=["GET"])
 def restore_file(id):
@@ -59,13 +82,13 @@ def convert_process(data: bytes):
     parser = BibtexParser()
     success, msg = parser.parse_file(file = data)
     if not success:
-        return return_error(msg, 500, method)
+        return return_error(msg, 400, method)
     success, msg, errors = parser.convert_file()
     if not success:
-        return return_error(msg, 500, method)
+        return return_error(msg, 400, method)
     success, msg = parser.save_rdf()
     if not success:
-        return return_error(msg, 500, method)
+        return return_error(msg, 400, method)
     return jsonify({'message': SUCCESS_UPLOAD, 'warnings': errors}), 200
 
 def return_error(msg, code, method=None):
@@ -73,17 +96,4 @@ def return_error(msg, code, method=None):
     return jsonify({'message': msg}), code
 
 if __name__ == "__main__":
-    # Flask logger configuration
-    logging.getLogger("werkzeug").setLevel(logLevel)
-    # API logger configuration
-    logger = logging.getLogger("bibtexToRDF")
-    filehandler = logging.FileHandler('logs/log-'+ str(int(time.time())) + '.log')
-    streamhandler = logging.StreamHandler()
-    formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(module)s:%(message)s')
-    streamhandler.setFormatter(formatter)
-    filehandler.setFormatter(formatter)
-    logger.setLevel(logLevel)
-    logger.addHandler(filehandler)
-    logger.addHandler(streamhandler)
-    logger.info('Starting API')
     app.run(host=os.environ.get('FLASK_HOST'), port=os.environ.get('FLASK_PORT'), debug=DEBUG)
