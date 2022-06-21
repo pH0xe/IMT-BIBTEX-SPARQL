@@ -65,7 +65,7 @@ class DataBaseManager:
     def commit_upload(self):
         self.db.commit()
 
-    def commit_upload(self):
+    def rollback_upload(self):
         self.db.rollback()
 
     def get_data_by_id(self, id) -> Union[bytes, None]:
