@@ -1,8 +1,10 @@
 from argparse import Namespace
+import keyword
 from rdflib import RDF, Graph, Literal, Namespace
 from HttpMessage import PROPERTY_NOT_FOUND
 
 from namespaceAssociation import get_property
+from utils import extract_keywords
 
 
 class RDFWriter:
@@ -13,14 +15,22 @@ class RDFWriter:
 
     def write_entry(self, entry_id, type, authors, fields):
         errors = []
+        keywords = []
         entry_id = Literal(entry_id)
         self.graph.add((entry_id, RDF.type, self.namespace[type]))
         self.graph.add((entry_id, self.namespace.hasAuthor, Literal(authors)))
         for key, value in fields:
-            success, prt = get_property(key)
+            success, prt, has_to_be_yaked = get_property(key)
+            if has_to_be_yaked:
+                keywords.extend(extract_keywords(value))
+            if prt == 'hasKeywords':
+                keywords.append(value)
+                continue
             if not success:
                 errors.append(PROPERTY_NOT_FOUND.format(prt))
             self.graph.add((entry_id, self.namespace[prt], Literal(value)))
+        if keywords:
+            self.graph.add((entry_id, self.namespace.hasKeywords, Literal(', '.join(keywords))))
         return errors
 
     def print_graph(self):
