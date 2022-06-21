@@ -4,6 +4,18 @@ import psycopg2
 import os
 from passlib.hash import bcrypt
 
+
+def init_db():
+    """
+    Initialize the database at first launch
+    """
+    dm = DatabaseManager()
+    if dm.user_exist("admin"):
+        print("Admin user already exists")
+        return
+    print("Creating admin user")
+    dm.insert_admin()
+
 class DatabaseManager:
     def __init__(self):
         self.connect_to_postgres()
@@ -49,6 +61,24 @@ class DatabaseManager:
             return False, "User already exist"
         except Exception as e:
             return False, e
+
+    def user_exist(self, login):
+        if self.conn is None:
+            return False
+
+        cur = self.conn.cursor()
+        sql_request = f"SELECT password FROM registeruser u WHERE u.login = '{login}'"
+        cur.execute(sql_request)
+        if cur.rowcount == 0:
+            return False
+        return True
+
+    def insert_admin(self):
+        hashed_password = self.hash_password(os.environ.get('ADMIN_PASSWORD'))
+        req = f"insert into registeruser (login, password, superadmin) values ('admin', '{hashed_password}', '1')"
+        cur = self.conn.cursor()
+        cur.execute(req)
+        self.conn.commit()
 
     def close_connection(self):
         self.conn.close()
