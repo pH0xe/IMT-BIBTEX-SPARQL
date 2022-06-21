@@ -9,13 +9,9 @@ services:
             - POSTGRES_PASSWORD=${POSTGRES_ADMIN_PASSWORD}
     sparql-endpoint:
         image: atomgraph/fuseki
-        command: --file /data/lib.rdf --update /library
-        volumes:
-            - ./data-files:/data:ro
+        command: --loc=/fuseki --update /library
     bibtex-to-rdf:
         build: bibtex-to-rdf
-        volumes:
-            - ./data-files:/app/rdfOut
     auth:
         build: auth-service
     gateway:
