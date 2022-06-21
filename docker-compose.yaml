@@ -18,7 +18,7 @@ services:
             - ./data-files:/app/rdfOut
     auth:
         build: auth-service
-    getaway:
-        build: getaway
+    gateway:
+        build: gateway
         ports:
             - 5000:5000
