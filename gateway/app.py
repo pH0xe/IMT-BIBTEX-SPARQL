@@ -14,6 +14,12 @@ load_dotenv()
 app = Flask("api-gateway")
 
 
+def load_configuration(path):
+    with open(path) as config_file:
+        config = yaml.load(config_file, Loader=yaml.FullLoader)
+    return config
+
+config = load_configuration('routing.yaml')
 
 @app.route("/<path:path>", methods=["GET", "POST", "PUT", "DELETE"])
 def path_router(path):
@@ -38,20 +44,14 @@ def path_router(path):
                     cookies=request.cookies,
                     allow_redirects=False)
             except Exception as e:
-                return Response(e ,status=500)
+                return Response(e, status=500)
 
             excluded_headers = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
             headers = [(name, value) for (name, value) in resp.raw.headers.items()
                     if name.lower() not in excluded_headers]
             return Response(resp.content, resp.status_code, headers)
-    return 'Not Found', 404
+    return jsonify({"error": "Not found: /" + path}), 404
 
-def load_configuration(path):
-    with open(path) as config_file:
-        config = yaml.load(config_file, Loader=yaml.FullLoader)
-    return config
 
 if __name__ == '__main__':
-    global config
-    config = load_configuration('routing.yaml')
     app.run(host=os.environ.get('FLASK_HOST'), port=os.environ.get('FLASK_PORT'), debug=DEBUG)

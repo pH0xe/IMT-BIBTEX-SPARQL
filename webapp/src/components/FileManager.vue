@@ -2,20 +2,23 @@
 import axios from "axios";
 import { ref, Ref } from "vue";
 
+const API_HOST: string = "localhost";
+const API_PORT: string = "5000";
+
 const items: Ref<any[]> = ref([]);
 
 const hasError: Ref<boolean> = ref(false);
 
 async function getFiles(): Promise<void> {
 	items.value = [];
-	await axios.get('http://localhost:8081/api/bibtex')
+	await axios.get(`http://${API_HOST}:${API_PORT}/api/bibtex`)
 		.then((response) => response.data.forEach((item: any) => items.value.unshift(item)))
 		.catch(() => hasError.value = true);
 }
 
 async function postFile(event : Event & any): Promise<void> {
 	await axios.post(
-		'http://localhost:8081/api/bibtex',
+		`http://${API_HOST}:${API_PORT}/api/bibtex`,
 		{
 			file: event.target!.files[0],
 		}, {
@@ -28,7 +31,7 @@ async function postFile(event : Event & any): Promise<void> {
 }
 
 async function deleteFile(id: number): Promise<void> {
-	await axios.delete(`http://localhost:8081/api/bibtex/${id}`)
+	await axios.delete(`http://${API_HOST}:${API_PORT}/api/bibtex/${id}`)
 		.then(() => getFiles())
 		.catch(() => hasError.value = true);
 }

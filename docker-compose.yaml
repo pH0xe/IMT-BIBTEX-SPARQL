@@ -2,8 +2,6 @@ version: '3.7'
 services:
     postgres:
         image: postgres:14.3-alpine
-        ports:
-            - 5432:5432
         restart: always
         volumes:
             - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
@@ -12,13 +10,15 @@ services:
     sparql-endpoint:
         image: atomgraph/fuseki
         command: --file /data/lib.rdf --update /library
-        ports:
-            - 3030:3030
         volumes:
             - ./data-files:/data:ro
     bibtex-to-rdf:
         build: bibtex-to-rdf
-        ports:
-            - 8081:5000
         volumes:
             - ./data-files:/app/rdfOut
+    auth:
+        build: auth-service
+    gateway:
+        build: gateway
+        ports:
+            - 5000:5000

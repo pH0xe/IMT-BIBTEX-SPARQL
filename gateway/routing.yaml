@@ -1,7 +1,10 @@
 paths:
   - path: api/auth
-    server: http://localhost:8082/
+    server: http://auth:5000/
     auth: False
   - path: api/bibtex
-    server: http://localhost:8081/
-    auth: True
+    server: http://bibtex-to-rdf:5000/
+    auth: False
+  - path: library/sparql
+    server: http://sparql-endpoint:3030/
+    auth: False
