@@ -4,7 +4,7 @@ import os
 
 from flask_cors import CORS
 
-from authModel import login, register
+from authModel import change_password, login, register
 from databaseManager import init_db
 from jwtHandler import verify_jwt_token
 
@@ -31,7 +31,6 @@ def login_endpoint():
 @app.route("/api/auth/register", methods=["POST"])
 def register_endpoint():
     auth_token = request.headers.get("Authorization")
-    print('auth_token', auth_token)
     if auth_token is not None:
         error, payload = verify_jwt_token(auth_token)
         if error :
@@ -47,6 +46,24 @@ def register_endpoint():
             return jsonify({"success": "User registered", "token": token}), 200
         return jsonify({"error": f"Unable to register user : {message}"}), 400
     return jsonify({"error": "Missing parameters"}), 400
+
+@app.route("/api/auth/password", methods=["POST"])
+def change_password_endpoint():
+    auth_token = request.headers.get("Authorization")
+    if auth_token is not None:
+        error, payload = verify_jwt_token(auth_token)
+        if error :
+            return jsonify(payload), 401
+    else:
+        return jsonify({"error": "Missing authentification token"}), 401
+    
+    current_password = request.form.get("currentPassword")
+    new_password = request.form.get("newPassword")
+    username = payload["username"]
+    token, message = change_password(username, current_password, new_password)
+    if token is not None:
+        return jsonify({"success": "Password changed", "token": token}), 200
+    return jsonify({"error": f"Unable to change password : {message}"}), 400
 
 if __name__ == "__main__":
     app.run(host=os.environ.get('FLASK_HOST'), port=os.environ.get('FLASK_PORT'), debug=DEBUG)
