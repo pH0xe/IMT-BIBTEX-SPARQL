@@ -41,7 +41,7 @@ class BibtexParser:
                 item_type = self.extract_type(item)
                 fields = self.extract_fields(item)
                 authors = self.extract_persons(item)
-                err = self.writer.write_entry(key, item_type, authors, fields)
+                err = self.writer.write_entry(key.replace(':', '_').replace('-', '_'), item_type, authors, fields)
                 errors.extend(err)
         except Exception as e:
             self.logger.error(UNEXPECTED_ERROR.format(e))
