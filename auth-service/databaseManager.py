@@ -44,7 +44,6 @@ class DatabaseManager:
             return (False, None)
         else:
             hashed_password, super_admin = cur.fetchone()
-            print(hashed_password, super_admin)
             return (bcrypt.using(rounds=13).verify(password, hashed_password), super_admin)
 
     def hash_and_register_user(self, login, password):
@@ -62,6 +61,26 @@ class DatabaseManager:
         except Exception as e:
             return False, e
 
+    def change_password_in_db(self, username, current_password, new_password):
+        if self.conn is None:
+            return False, "Connection to database failed"
+        
+        if not  self.user_exist(username):
+            return False, "User doesn't exist"
+        
+        if not self.check_password_in_database(username, current_password):
+            return False, "Wrong current password"
+        
+        hashed_password = self.hash_password(new_password)
+        cur = self.conn.cursor()
+        try:
+            sql_request = f"UPDATE registeruser SET password = '{hashed_password}' WHERE login = '{username}'"
+            cur.execute(sql_request)
+            self.conn.commit()
+            return True, 'Password changed'
+        except Exception as e:
+            return False, str(e)
+        
     def user_exist(self, login):
         if self.conn is None:
             return False

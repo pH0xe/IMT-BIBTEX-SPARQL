@@ -26,3 +26,15 @@ def login(username, password) -> str:
     database_manager.close_connection()
     # User can't login
     return token
+
+def change_password(username, current_password, new_password) -> Tuple[str, str]:
+    token = None
+    database_manager = DatabaseManager()
+    success, message = database_manager.change_password_in_db(username, current_password, new_password)
+    # User successfully change password
+    if success:
+        # Generate token for user
+        token = generate_jwt_token(username, False)
+    database_manager.close_connection()
+    # return none if User can't register
+    return token, message
