@@ -5,6 +5,7 @@ import os
 from flask_cors import CORS
 
 from authModel import login, register
+from databaseManager import init_db
 from jwtHandler import verify_jwt_token
 
 DEBUG = True
@@ -12,6 +13,8 @@ DEBUG = True
 load_dotenv()
 app = Flask("auth-api")
 CORS(app)
+
+init_db()
 
 @app.route("/api/auth/login", methods=["POST"])
 def login_endpoint():
