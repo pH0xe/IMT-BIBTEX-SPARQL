@@ -20,8 +20,8 @@ class RDFWriter:
         self.graph.add((entry_id, RDF.type, self.namespace[type]))
         self.graph.add((entry_id, self.namespace.hasAuthor, Literal(authors)))
         for key, value in fields:
-            success, prt, hasToBeYaked = get_property(key)
-            if hasToBeYaked:
+            success, prt, has_to_be_yaked = get_property(key)
+            if has_to_be_yaked:
                 keywords.extend(extract_keywords(value))
             if prt == 'hasKeywords':
                 keywords.append(value)

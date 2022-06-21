@@ -83,8 +83,8 @@ logger = logging.getLogger('bibtexToRDF')
 def get_property(name) -> tuple[bool, str, bool]:
     name = name.lower()
     try:
-        proper, hasToBeYaked = properties[name]
-        return True, proper, hasToBeYaked
+        proper, has_to_be_yaked = properties[name]
+        return True, proper, has_to_be_yaked
     except KeyError:
         logger.warning(PROPERTY_NOT_FOUND.format(name))
         return False, f"has{name[0].upper()}{name[1:]}", False
