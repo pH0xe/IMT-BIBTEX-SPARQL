@@ -59,7 +59,7 @@ class DataBaseManager:
             self.commit_upload()
             return jsonify({'success': True}), 200
         except Exception as e:
-            return jsonify({'success': False, 'error': str(e)}), 500
+            return jsonify({'success': False, 'error': str(e)}), 400
 
 
     def commit_upload(self):
