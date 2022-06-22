@@ -1,9 +1,11 @@
 import logging
 import os
 import time
+from typing import Tuple
+import requests
 from dotenv import load_dotenv
 
-from flask import Flask, jsonify, request
+from flask import Flask, Response, jsonify, request
 from flask_cors import CORS
 from bibtexParser import BibtexParser
 
@@ -51,9 +53,12 @@ def upload_file():
     if not success:
         return return_error(FILE_NOT_UPLOADED, 500, method)
 
-    message, code = convert_process(data)
+    message, code, graph_data = convert_process(data)
     if code == 200:
         database_manager.commit_upload()
+        url = "http://sparql-endpoint:3030/library/data"
+        file_data = { 'file': ('lib.rdf', graph_data)}
+        requests.put(url, files=file_data)
     else:
         database_manager.rollback_upload()
 
@@ -85,7 +90,7 @@ def delete_file_endpoint(id):
         return return_error(CANNOT_CONNECT_TO_DATABASE, 500, method)
     return database_manager.delete_file(id)
     
-def convert_process(data: bytes):
+def convert_process(data: bytes) -> Tuple[Response, int, str]:
     method = 'convert_process'
     parser = BibtexParser()
     success, msg = parser.parse_file(file = data)
@@ -94,10 +99,10 @@ def convert_process(data: bytes):
     success, msg, errors = parser.convert_file()
     if not success:
         return return_error(msg, 400, method)
-    success, msg = parser.save_rdf()
+    success, msg, graph_data = parser.save_rdf()
     if not success:
         return return_error(msg, 400, method)
-    return jsonify({'message': SUCCESS_UPLOAD, 'warnings': errors}), 200
+    return jsonify({'message': SUCCESS_UPLOAD, 'warnings': errors}), 200, graph_data
 
 def return_error(msg, code, method=None):
     logger.error(f'{msg} {method}')

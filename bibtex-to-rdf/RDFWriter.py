@@ -39,4 +39,4 @@ class RDFWriter:
         print(self.graph.serialize(format='pretty-xml'))
         
     def save_graph(self):
-        self.graph.serialize(destination='rdfOut/lib.rdf', format='pretty-xml')
+        return self.graph.serialize(format='pretty-xml')
