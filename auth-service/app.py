@@ -68,5 +68,8 @@ def change_password_endpoint():
         return jsonify({"success": "Password changed", "token": token}), 200
     return jsonify({"error": f"Unable to change password : {message}"}), 400
 
+def create_app():
+    return app
+
 if __name__ == "__main__":
     app.run(host=os.environ.get('FLASK_HOST'), port=os.environ.get('FLASK_PORT'), debug=DEBUG)
