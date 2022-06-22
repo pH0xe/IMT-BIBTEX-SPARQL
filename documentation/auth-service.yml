@@ -1,0 +1,221 @@
+openapi: 3.0.0
+servers: []
+info:
+  description: API to authenticate users
+  version: "1.0.0"
+  title: Authentication Service
+  contact:
+    url: https://github.com/pH0xe/IMT-BIBTEX-SPARQL
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: admins
+    description: Secured Admin-only calls
+  - name: public
+    description: Operations available to everyone
+paths:
+  /api/auth/login:
+    post:
+      tags:
+        - public
+      summary: Login
+      operationId: login_endpoint
+      description: Login using username and password, returns a JWT token
+      responses:
+        '200':
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+        '401':
+          description: Invalid cretentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        description: Form data required to login
+  /api/auth/register:
+    post:
+      tags:
+        - admins
+      summary: Register a new user
+      operationId: register_endpoint
+      description: Register a new user and return a JWT token
+      responses:
+        '200':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+        '401':
+          description: Missing or invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+      parameters:
+        - in: header
+          name: Authorization
+          description: Required to ensure that the user is connected
+          required: true
+          schema:
+            type: string
+            format: jwt
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        description: Form data required to register
+  /api/auth/password:
+    put:
+      tags:
+        - admins
+      summary: Change password
+      operationId: change_password_endpoint
+      description: Change password for a user
+      parameters:
+        - in: header
+          name: Authorization
+          description: Required to ensure that the user is connected
+          required: true
+          schema:
+            type: string
+            format: jwt
+      responses:
+        200:
+          description: Password changed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+        401:
+          description: Missing or invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+        description: Form data required to change password
+  /api/auth/delete/{id}:
+    delete:
+      tags:
+        - admins
+      summary: Delete a user
+      operationId: delete_user_endpoint
+      description: Delete a user in the database
+      parameters:
+        - in: header
+          name: Authorization
+          description: Required to ensure that the user is connected
+          required: true
+          schema:
+            type: string
+            format: jwt
+        - in: path
+          name: id
+          description: ID of the user to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: User deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+        401:
+          description: Missing or invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+        404:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+components:
+  schemas:
+    SuccessResponse:
+      type: object
+      required:
+        - success
+        - token
+      properties:
+        success:
+          type: string
+          example: Successfully logged in
+        token:
+          type: string
+          description: JWT token
+    FailureResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          example: 'Invalid username or password'
+    LoginRequest:
+      type: object
+      required:
+        - login
+        - password
+      properties:
+        login:
+          type: string
+          example: 'admin'
+        password:
+          type: string
+          example: 'admin'
+    ChangePasswordRequest:
+      type: object
+      required:
+        - currentPassword
+        - newPassword
+      properties:
+        currentPassword:
+          type: string
+          example: 'admin'
+        newPassword:
+          type: string
+          example: 'admin'
