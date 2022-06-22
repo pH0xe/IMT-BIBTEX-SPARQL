@@ -59,3 +59,14 @@ $ git clone https://github.com/pH0xe/septime.git
 1. Copier le fichier `.env.sample` dans le fichier `.env`
 2. Dans le fichier `.env` :
     - Mettre Le meme mot de passe dans `AUTHSECRET` que celui mis dans le dossier __auth-service__
+
+### Lancement
+
+Pour lancer le serveur il suffit de lancer le script `launch-dev.sh`
+```bash	
+./launch-dev.sh
+```
+Dans certain cas le script n'est pas executable après un clone. Il faut donc le rendre executable.
+```bash	
+chmod +x launch-dev.sh
+```
