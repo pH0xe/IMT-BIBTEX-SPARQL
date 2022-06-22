@@ -36,10 +36,10 @@ function start_frontend {
 	(
 		cd webapp
 
-		if [ "$ARG_1" != "--quickly" ]
-		then
-			rm -rf node_modules
-		fi
+		# if [ "$ARG_1" != "--quickly" ]
+		# then
+		# 	rm -rf webapp/node_modules
+		# fi
 
 		yarn install
 		yarn dev
