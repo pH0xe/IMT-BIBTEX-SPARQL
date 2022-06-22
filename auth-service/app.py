@@ -50,7 +50,7 @@ def register_endpoint():
         return jsonify({"error": f"Unable to register user : {message}"}), 400
     return jsonify({"error": "Missing parameters"}), 400
 
-@app.route("/api/auth/password", methods=["POST"])
+@app.route("/api/auth/password", methods=["PUT"])
 def change_password_endpoint():
     auth_token = request.headers.get("Authorization")
     if auth_token is not None:
