@@ -7,10 +7,12 @@ import requests
 import yaml
 
 from jwtHandler import verify_jwt_token
+from utils import check_environnement
 
 DEBUG = True
 
 load_dotenv()
+check_environnement()
 app = Flask("api-gateway")
 CORS(app)
 
