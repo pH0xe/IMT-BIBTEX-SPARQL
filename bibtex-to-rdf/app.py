@@ -11,6 +11,7 @@ from bibtexParser import BibtexParser
 
 from databaseManager import DataBaseManager
 from HttpMessage import CANNOT_CONNECT_TO_DATABASE, FILE_NOT_UPLOADED, NO_FILE_SELECTED, NO_FILE_PART, SUCCESS_UPLOAD
+from utils import check_environnement
 
 def init_logger():
     # Flask logger configuration
@@ -34,6 +35,7 @@ logLevel = logging.DEBUG if DEBUG else logging.ERROR
 logger = init_logger()
 
 load_dotenv()
+check_environnement()
 app = Flask("BibFileAPI")
 CORS(app)
 
