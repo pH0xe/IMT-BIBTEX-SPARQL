@@ -2,16 +2,18 @@ from email import message
 import os
 import re
 from flask import Flask, Response, jsonify, redirect, request
+from flask_cors import CORS
 from dotenv import load_dotenv
 import requests
 import yaml
 
-from jwt import verify_jwt_token
+from jwtHandler import verify_jwt_token
 
 DEBUG = True
 
 load_dotenv()
 app = Flask("api-gateway")
+CORS(app)
 
 
 def load_configuration(path):
