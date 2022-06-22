@@ -118,6 +118,7 @@ async function connect(): Promise<void> {
 		});
 }
 
+getFiles();
 </script>
 
 <template>
@@ -178,7 +179,7 @@ async function connect(): Promise<void> {
 						{{ item.name }}
 					</td>
 					<td class="content-cell">
-						{{ new Date(item.uploadDate).toLocaleString("fr") }}
+						new Date(item.uploadDate).toLocaleString("fr")
 					</td>
 					<td>
 						<button class="button is-ghost">
