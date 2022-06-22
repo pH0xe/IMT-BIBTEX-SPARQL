@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import axios from "axios";
-import { computed, ComputedRef, ref, Ref } from "vue";
+import { computed, ComputedRef, ref, Ref, watch } from "vue";
 
 const API_HOST = "localhost";
 const API_PORT = "5000";
@@ -11,8 +11,8 @@ const NETWORK_ERROR_MESSAGE = "Unable to reach server. Please check your connect
 const login: Ref<string> = ref("");
 const password: Ref<string> = ref("");
 
-const token: Ref<string | undefined> = ref(undefined);
-const hasToken: ComputedRef<boolean> = computed(() => token.value !== undefined)
+const token: Ref<string | null> = ref(sessionStorage.getItem("token"));
+const hasToken: ComputedRef<boolean> = computed(() => token.value !== null)
 
 const errorMessage: Ref<string | undefined> = ref(undefined);
 const hasError: ComputedRef<boolean> = computed(() => errorMessage.value !== undefined);
@@ -25,8 +25,16 @@ function clearError(): void {
 
 function clearToken(): void {
 	clearError();
-	token.value = undefined;
+	token.value = null;
 }
+
+watch(token, () => {
+	if (token.value === null) {
+		sessionStorage.removeItem("token");
+	} else {
+		sessionStorage.setItem("token", token.value);
+	}
+});
 
 async function getFiles(): Promise<void> {
 	items.value = [];
