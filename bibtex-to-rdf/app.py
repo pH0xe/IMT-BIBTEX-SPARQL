@@ -81,7 +81,7 @@ def restore_file(id):
         update_code = update_fuseki(graph_data)
         if update_code != 200:
             message = jsonify({'message': 'Unable to update fuseki'})
-            code = 500
+            code = 503
 
     return message, code
 
