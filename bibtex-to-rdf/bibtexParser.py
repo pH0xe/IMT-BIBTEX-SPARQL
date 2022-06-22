@@ -48,13 +48,13 @@ class BibtexParser:
             return False, UNEXPECTED_ERROR.format(e), errors
         return True, SUCCESS_CONVERT, errors
 
-    def save_rdf(self) -> tuple[bool, str]:
+    def save_rdf(self) -> tuple[bool, str, str]:
         try:
-            self.writer.save_graph()
+            graph_data = self.writer.save_graph()
         except Exception as e:
             self.logger.error(UNEXPECTED_ERROR.format(e))
             return False, UNEXPECTED_ERROR.format(e)
-        return True, SUCCESS_SAVE
+        return True, SUCCESS_SAVE, graph_data
         
 
     def extract_type(self, entry):
