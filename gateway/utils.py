@@ -3,7 +3,7 @@ import sys
 
 
 def check_environnement():
-    to_test = ['AUTHSECRET', 'FLASK_HOST', 'FLASK_PORT']
+    to_test = ['AUTHSECRET']
     missing = []
 
     for v in to_test:

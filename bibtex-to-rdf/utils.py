@@ -10,7 +10,7 @@ def extract_keywords(text: str) -> List[str]:
     return [keyword[0] for keyword in keywords]
 
 def check_environnement():
-    to_test = ['POSTGRESQL_USERNAME', 'POSTGRESQL_PASSWORD', 'POSTGRESQL_HOST', 'POSTGRESQL_PORT', 'POSTGRESQL_DB', 'FLASK_HOST', 'FLASK_PORT']
+    to_test = ['POSTGRESQL_USERNAME', 'POSTGRESQL_PASSWORD', 'POSTGRESQL_HOST', 'POSTGRESQL_PORT', 'POSTGRESQL_DB']
     missing = []
 
     for v in to_test:
