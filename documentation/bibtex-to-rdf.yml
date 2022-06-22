@@ -1,0 +1,210 @@
+openapi: 3.0.0
+servers: []
+info:
+  description: API to convert bibtex to RDF
+  version: "1.0.0"
+  title: Bibtex to RDF
+  contact:
+    url: https://https://github.com/pH0xe/IMT-BIBTEX-SPARQL
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: admins
+    description: Secured Admin-only calls
+paths:
+  /api/bibtex:
+    get:
+      tags:
+        - admins
+      summary: Get all uploaded bibtex files
+      operationId: get_all_files
+      description: |
+        Query all uploaded bibtex files.
+      responses:
+        '200':
+          description: List of bibtex informations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BibtexFile'
+        '500':
+          description: Could not connect to database
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - admins
+      summary: Upload a bibtex file
+      operationId: upload_file
+      description: Upload a bibtex file in database, parse it and send it to fuseki server.
+      responses:
+        '200':
+          description: Successfully uploaded bibtex file
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConvertResponse'
+          
+        '400':
+          description: Invalid file uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '418':
+          description: Bibtex file contains syntax errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConvertResponse'
+        '500':
+          description: Error with database
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: Error with fuseki server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UploadFileBody'
+        description: File to upload
+  /api/bibtex/{id}:
+    get:
+      tags:
+        - admins
+      summary: Restore a bibtex file
+      operationId: restore_file
+      description: Restore a bibtex file from history.
+      parameters:
+        - in: path
+          name: id
+          description: Id of the bibtex file
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Successfully restored bibtex file
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConvertResponse'
+        418:
+          description: Bibtex file contains syntax errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConvertResponse'
+        500:
+          description: Error with database
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: Error with fuseki server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - admins
+      summary: Delete a bibtex file
+      operationId: delete_file_endpoint
+      description: Delete a bibtex file from database and history.
+      parameters:
+        - in: path
+          name: id
+          description: Id of the bibtex file
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted bibtex file
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        '400':
+          description: Error when deleting file
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        '500':
+          description: Error with database
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Error:
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: 'Invalid input'
+    ConvertResponse:
+      required:
+        - message
+        - warnings
+      properties:
+        message:
+          type: string
+          example: 'Invalid input'
+        warnings:
+          type: array
+          items:
+            type: string
+            example: 'Warning message'
+    BibtexFile:
+      required:
+        - id
+        - name
+        - uploaddate
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: 'lib.bib'
+        uploaddate:
+          type: integer
+          format: timestamp (second)
+          example: '1655901750'
+    UploadFileBody:
+      required:
+        - file
+      properties:
+        file:
+          type: string
+          format: binary
+          description: File to upload
+    DeleteResponse:
+      required:
+        - success
+      properties:
+        success:
+          type: boolean
+          example: true
+        error:
+          type: string
+          example: 'File not found'
