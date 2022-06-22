@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM python:3.10-slim-buster
+FROM tecktron/python-waitress:latest
 
 WORKDIR /app
 
@@ -10,4 +10,4 @@ RUN pip3 install -r requirements.txt
 
 COPY . /app
 
-CMD ["flask", "run", "--host", "0.0.0.0"]
+CMD ["waitress-serve", "--port=5000", "--call", "app:create_app"]

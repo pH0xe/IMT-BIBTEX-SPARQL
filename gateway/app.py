@@ -54,6 +54,8 @@ def path_router(path):
             return Response(resp.content, resp.status_code, headers)
     return jsonify({"error": "Not found: /" + path}), 404
 
+def create_app():
+	return app
 
 if __name__ == '__main__':
     app.run(host=os.environ.get('FLASK_HOST'), port=os.environ.get('FLASK_PORT'), debug=DEBUG)
