@@ -9,7 +9,7 @@ services:
             - POSTGRES_PASSWORD=${POSTGRES_ADMIN_PASSWORD}
     sparql-endpoint:
         image: atomgraph/fuseki
-        command: --loc=/fuseki --update /library
+        command: --loc=/fuseki --update --quiet /library
     bibtex-to-rdf:
         build: bibtex-to-rdf
     auth:
