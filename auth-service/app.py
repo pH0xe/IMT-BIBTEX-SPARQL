@@ -7,10 +7,13 @@ from flask_cors import CORS
 from authModel import change_password, login, register
 from databaseManager import init_db
 from jwtHandler import verify_jwt_token
+from utils import check_environnement
 
 DEBUG = True
 
 load_dotenv()
+check_environnement()
+
 app = Flask("auth-api")
 CORS(app)
 
