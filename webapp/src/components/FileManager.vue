@@ -179,7 +179,7 @@ getFiles();
 						{{ item.name }}
 					</td>
 					<td class="content-cell">
-						{{ new Date(item.uploaddate).toLocaleString("fr") }}
+						{{ new Date(item.uploaddate * 1000).toLocaleString("fr") }}
 					</td>
 					<td>
 						<button class="button is-ghost">
