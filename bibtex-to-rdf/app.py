@@ -55,10 +55,13 @@ def upload_file():
 
     message, code, graph_data = convert_process(data)
     if code == 200:
-        database_manager.commit_upload()
-        url = "http://sparql-endpoint:3030/library/data"
-        file_data = { 'file': ('lib.rdf', graph_data)}
-        requests.put(url, files=file_data)
+        update_code = update_fuseki(graph_data)
+        if update_code == 200:
+            database_manager.commit_upload()
+        else:
+            database_manager.rollback_upload()
+            message = jsonify({'message': 'Unable to update fuseki'})
+            code = 500
     else:
         database_manager.rollback_upload()
 
@@ -71,7 +74,14 @@ def restore_file(id):
     if not database_manager.connect_to_postgres():
         return return_error(CANNOT_CONNECT_TO_DATABASE, 500, method)
     data = database_manager.get_data_by_id(id)
-    return convert_process(data)
+    message, code, graph_data = convert_process(data)
+    if code == 200:
+        update_code = update_fuseki(graph_data)
+        if update_code != 200:
+            message = jsonify({'message': 'Unable to update fuseki'})
+            code = 500
+
+    return message, code
 
 
 @app.route("/api/bibtex", methods=["GET"])
@@ -103,6 +113,12 @@ def convert_process(data: bytes) -> Tuple[Response, int, str]:
     if not success:
         return return_error(msg, 400, method)
     return jsonify({'message': SUCCESS_UPLOAD, 'warnings': errors}), 200, graph_data
+
+def update_fuseki(graph_data: str):
+    url = "http://sparql-endpoint:3030/library/data"
+    file_data = { 'file': ('lib.rdf', graph_data, 'application/octet-stream')}
+    rep = requests.request('PUT',url, files=file_data)
+    return rep.status_code
 
 def return_error(msg, code, method=None):
     logger.error(f'{msg} {method}')

@@ -1,6 +1,5 @@
 from email import message
 import os
-import re
 from flask import Flask, Response, jsonify, redirect, request
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -25,7 +24,6 @@ config = load_configuration('routing.yaml')
 
 @app.route("/<path:path>", methods=["GET", "POST", "PUT", "DELETE"])
 def path_router(path):
-    print(request.get_data())
     for entry in config['paths']:
         if path.startswith(entry['path']):
             if entry['auth']:
