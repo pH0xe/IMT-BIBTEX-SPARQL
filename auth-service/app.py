@@ -28,7 +28,7 @@ def login_endpoint():
         if token is not None:
             return jsonify({"success": "User logged in", "token": token}), 200
         else:
-            return jsonify({"error": "Wrong password or username"}), 400      
+            return jsonify({"error": "Wrong password or username"}), 401      
     return jsonify({"error": "Missing parameters"}), 400
 
 @app.route("/api/auth/register", methods=["POST"])

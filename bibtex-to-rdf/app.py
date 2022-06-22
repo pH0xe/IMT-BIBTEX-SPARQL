@@ -107,13 +107,13 @@ def convert_process(data: bytes) -> Tuple[Response, int, str]:
     parser = BibtexParser()
     success, msg = parser.parse_file(file = data)
     if not success:
-        return return_error(msg, 400, method)
+        return return_error(msg, 418, method)
     success, msg, errors = parser.convert_file()
     if not success:
-        return return_error(msg, 400, method)
+        return return_error(msg, 418, method)
     success, msg, graph_data = parser.save_rdf()
     if not success:
-        return return_error(msg, 400, method)
+        return return_error(msg, 500, method)
     return jsonify({'message': SUCCESS_UPLOAD, 'warnings': errors}), 200, graph_data
 
 def update_fuseki(graph_data: str):
