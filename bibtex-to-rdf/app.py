@@ -63,7 +63,7 @@ def upload_file():
         else:
             database_manager.rollback_upload()
             message = jsonify({'message': 'Unable to update fuseki'})
-            code = 500
+            code = 503
     else:
         database_manager.rollback_upload()
 
