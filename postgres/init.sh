@@ -1,3 +1,7 @@
+#!/bin/bash
+set -e
+
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
 -------------------------------------------------------------
 -- DATABASE
 -------------------------------------------------------------
@@ -23,7 +27,7 @@ CREATE ROLE "bibtex-user" WITH
   NOCREATEDB
   NOCREATEROLE
   NOREPLICATION
-  ENCRYPTED PASSWORD 'bibtex-user';
+  ENCRYPTED PASSWORD '$BIBTEX_USER_PASSWORD';
 
 \c bibtex-project;
 
@@ -127,3 +131,5 @@ ALTER TABLE IF EXISTS public.registeruser
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE public.registeruser TO "bibtex-user";
 
 GRANT ALL ON TABLE public.registeruser TO postgres;
+
+EOSQL

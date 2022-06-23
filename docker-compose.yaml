@@ -4,9 +4,10 @@ services:
         image: postgres:14.3-alpine
         restart: always
         volumes:
-            - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+            - ./postgres/init.sh:/docker-entrypoint-initdb.d/init.sh:ro
         environment:
             - POSTGRES_PASSWORD=${POSTGRES_ADMIN_PASSWORD}
+            - BIBTEX_USER_PASSWORD=${BIBTEX_USER_PASSWORD}
     sparql-endpoint:
         image: atomgraph/fuseki
         command: --loc=/fuseki --update --quiet /library
