@@ -38,3 +38,12 @@ def change_password(username, current_password, new_password) -> Tuple[str, str]
     database_manager.close_connection()
     # return none if User can't register
     return token, message
+
+def remove_user(id) -> Tuple[bool, int]:
+    database_manager = DatabaseManager()
+    if database_manager.is_super_admin(id):
+        return False, 404
+
+    success = database_manager.remove_user(id)
+    database_manager.close_connection()
+    return success, None

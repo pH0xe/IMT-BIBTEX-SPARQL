@@ -4,7 +4,7 @@ import os
 
 from flask_cors import CORS
 
-from authModel import change_password, login, register
+from authModel import change_password, login, register, remove_user
 from databaseManager import init_db
 from jwtHandler import verify_jwt_token
 from utils import check_environnement
@@ -67,6 +67,25 @@ def change_password_endpoint():
     if token is not None:
         return jsonify({"success": "Password changed", "token": token}), 200
     return jsonify({"error": f"Unable to change password : {message}"}), 400
+
+@app.route("/api/auth/delete/<id>", methods=["DELETE"])
+def delete_user_endpoint(id):
+    auth_token = request.headers.get("Authorization")
+    if auth_token is not None:
+        error, payload = verify_jwt_token(auth_token)
+        if error :
+            return jsonify(payload), 401
+    else:
+        return jsonify({"error": "Missing authentification token"}), 401
+    try:
+        success, code = remove_user(id)
+        if success:
+            return jsonify({"success": "User deleted"}), 200
+        if code == 404:
+            return jsonify({"error": "User not found"}), 404
+        return jsonify({"error": f"Unable to remove user"}), 400
+    except Exception as e:
+        return jsonify({"error": f"Unable to remove user : {str(e)}"}), 400
 
 def create_app():
     return app
