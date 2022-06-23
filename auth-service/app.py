@@ -18,8 +18,6 @@ check_environnement()
 app = Flask("auth-api")
 CORS(app)
 
-init_db()
-
 @app.route("/api/auth/login", methods=["POST"])
 def login_endpoint():
     password = request.form.get("password")
