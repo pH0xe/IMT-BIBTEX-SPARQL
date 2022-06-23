@@ -64,9 +64,9 @@ $ git clone https://github.com/pH0xe/septime.git
 
 Pour lancer le serveur il suffit de lancer le script `launch-dev.sh`
 ```bash	
-./launch-dev.sh
+./launch-dev
 ```
 Dans certain cas le script n'est pas executable après un clone. Il faut donc le rendre executable.
 ```bash	
-chmod +x launch-dev.sh
+chmod +x launch-dev
 ```
