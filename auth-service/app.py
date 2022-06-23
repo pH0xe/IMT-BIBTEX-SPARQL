@@ -1,13 +1,14 @@
-from flask import Flask, jsonify, request
-from dotenv import load_dotenv
-import os
-
-from flask_cors import CORS
-
 from authModel import change_password, login, register, remove_user
 from databaseManager import init_db
 from jwtHandler import verify_jwt_token
 from utils import check_environnement
+from flask import Flask, jsonify, request
+from dotenv import load_dotenv
+from psycopg2 import OperationalError
+from flask_cors import CORS
+import logging
+import time
+import sys
 
 DEBUG = True
 
@@ -88,4 +89,24 @@ def delete_user_endpoint(id):
         return jsonify({"error": f"Unable to remove user : {str(e)}"}), 400
 
 def create_app():
+    db_is_initialized = False
+    tries = 0
+    max_tries = 3
+    wait_time = 5
+    while not db_is_initialized and tries < max_tries:
+        tries += 1
+
+        try:
+            init_db()
+        except OperationalError:
+            logging.error("Unable to connect to the database")
+            if tries < max_tries:
+                logging.error(f"Retrying in {wait_time}s")
+                time.sleep(wait_time)
+            else:
+                logging.error("Too many tries, shutting down.")
+                sys.exit(1)
+        else:
+            db_is_initialized = True
+
     return app
