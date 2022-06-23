@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import axios from "axios";
-import { computed, ComputedRef, ref, Ref, watch } from "vue";
+import { computed, ComputedRef, ref, Ref } from "vue";
 
 const emit = defineEmits(["loggedIn"]);
 
