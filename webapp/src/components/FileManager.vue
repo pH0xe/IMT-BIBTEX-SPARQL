@@ -37,14 +37,17 @@ watch(token, () => {
 });
 
 async function getFiles(): Promise<void> {
-	items.value = [];
+	clearError();
 	await axios.get(
 		`http://${API_HOST}:${API_PORT}/api/bibtex`,
 		{
 			headers: { Authorization: `${token.value}` },
 		},
 	)
-		.then((response) => response.data.forEach((item: any) => items.value.unshift(item)))
+		.then((response) => {
+			items.value = [];
+			response.data.forEach((item: any) => items.value.unshift(item));
+		})
 		.catch((error) => {
 			if (error.response.status === 403) {
 				clearToken();
@@ -55,6 +58,7 @@ async function getFiles(): Promise<void> {
 }
 
 async function postFile(event : Event & any): Promise<void> {
+	clearError();
 	await axios.post(
 		`http://${API_HOST}:${API_PORT}/api/bibtex`,
 		{
@@ -76,7 +80,29 @@ async function postFile(event : Event & any): Promise<void> {
 		});
 }
 
+async function restoreFile(id: number): Promise<void> {
+	clearError();
+	await axios.post(
+		`http://${API_HOST}:${API_PORT}/api/bibtex/${id}`,
+		{},
+		{
+			headers: {
+				Authorization: `${token.value}`,
+			},
+		}
+	)
+		.then(() => getFiles())
+		.catch((error) => {
+			if (error.response.status === 403) {
+				clearToken();
+			} else {
+				errorMessage.value = NETWORK_ERROR_MESSAGE;
+			}
+		});
+}
+
 async function deleteFile(id: number): Promise<void> {
+	clearError();
 	await axios.delete(
 		`http://${API_HOST}:${API_PORT}/api/bibtex/${id}`,
 		{
@@ -182,7 +208,7 @@ getFiles();
 						{{ new Date(item.uploaddate * 1000).toLocaleString("fr") }}
 					</td>
 					<td>
-						<button class="button is-ghost">
+						<button @click="restoreFile(item.id)" class="button is-ghost">
 							<span class="icon">
 								<i class="mdi mdi-24px mdi-restore" />
 							</span>
