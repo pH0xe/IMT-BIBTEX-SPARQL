@@ -3,7 +3,7 @@ import sys
 
 
 def check_environnement():
-    to_test = ['DBNAME', 'DBUSER', 'DBPASSWORD', 'DBHOST', 'DBPORT', 'AUTHSECRET', 'FLASK_HOST', 'FLASK_PORT', 'ADMIN_PASSWORD']
+    to_test = ['DBNAME', 'DBUSER', 'DBPASSWORD', 'DBHOST', 'DBPORT', 'AUTHSECRET', 'ADMIN_PASSWORD']
     missing = []
 
     for v in to_test:
