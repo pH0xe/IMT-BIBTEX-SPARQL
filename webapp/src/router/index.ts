@@ -13,7 +13,11 @@ const routes = [
 		name: "sparklis",
 		path: "/sparklis",
 		component: () => import("@/components/SparklisViewer.vue"),
-	}
+	}, {
+		name: "users",
+		path: "/users",
+		component: () => import("@/components/UserManager.vue"),
+	},
 ];
 
 export default createRouter({
