@@ -91,6 +91,17 @@ class DatabaseManager:
         if cur.rowcount == 0:
             return False
         return True
+    
+    def is_super_admin(self, id):
+        if self.conn is None:
+            return False
+
+        cur = self.conn.cursor()
+        sql_request = f"SELECT superadmin FROM registeruser u WHERE u.id = '{id}'"
+        cur.execute(sql_request)
+        if cur.rowcount == 0:
+            return False
+        return cur.fetchone()[0] == 1
 
     def insert_admin(self):
         hashed_password = self.hash_password(os.environ.get('ADMIN_PASSWORD'))
@@ -98,6 +109,15 @@ class DatabaseManager:
         cur = self.conn.cursor()
         cur.execute(req)
         self.conn.commit()
+    
+    def remove_user(self, id):
+        if self.conn is None:
+            return False
+        cur = self.conn.cursor()
+        sql_request = f"DELETE FROM registeruser WHERE id = '{id}'"
+        cur.execute(sql_request)
+        self.conn.commit()
+        return True
 
     def close_connection(self):
         self.conn.close()

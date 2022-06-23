@@ -81,7 +81,7 @@ paths:
               $ref: '#/components/schemas/UploadFileBody'
         description: File to upload
   /api/bibtex/{id}:
-    get:
+    post:
       tags:
         - admins
       summary: Restore a bibtex file

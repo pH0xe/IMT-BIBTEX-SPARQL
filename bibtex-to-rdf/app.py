@@ -69,7 +69,7 @@ def upload_file():
 
     return message, code
 
-@app.route("/api/bibtex/<id>", methods=["GET"])
+@app.route("/api/bibtex/<id>", methods=["POST"])
 def restore_file(id):
     method = 'restore_file'
     database_manager = DataBaseManager()
