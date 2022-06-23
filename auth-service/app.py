@@ -1,4 +1,4 @@
-from authModel import change_password, login, register, remove_user
+from authModel import change_password, get_users, login, register, remove_user
 from databaseManager import init_db
 from jwtHandler import verify_jwt_token
 from utils import check_environnement
@@ -87,6 +87,21 @@ def delete_user_endpoint(id):
         return jsonify({"error": f"Unable to remove user"}), 400
     except Exception as e:
         return jsonify({"error": f"Unable to remove user : {str(e)}"}), 400
+
+@app.route("/api/auth/users", methods=["GET"])
+def get_users_endpoint():
+    auth_token = request.headers.get("Authorization")
+    if auth_token is not None:
+        error, payload = verify_jwt_token(auth_token)
+        if error :
+            return jsonify(payload), 401
+    else:
+        return jsonify({"error": "Missing authentification token"}), 401
+    try:
+        users = get_users()
+        return jsonify(users), 200
+    except Exception as e:
+        return jsonify({"error": f"Unable to query users : {str(e)}"}), 400    
 
 def create_app():
     db_is_initialized = False

@@ -47,3 +47,9 @@ def remove_user(id) -> Tuple[bool, int]:
     success = database_manager.remove_user(id)
     database_manager.close_connection()
     return success, None
+
+def get_users() -> list:
+    database_manager = DatabaseManager()
+    users = database_manager.get_all_users()
+    database_manager.close_connection()
+    return users

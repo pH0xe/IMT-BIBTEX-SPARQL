@@ -3,6 +3,7 @@ from errno import errorcode
 import psycopg2
 import os
 from passlib.hash import bcrypt
+from psycopg2.extras import RealDictCursor
 
 
 def init_db():
@@ -118,6 +119,16 @@ class DatabaseManager:
         cur.execute(sql_request)
         self.conn.commit()
         return True
+    
+    def get_all_users(self):
+        if self.conn is None:
+            return False
+        cur = self.conn.cursor(cursor_factory=RealDictCursor)
+        sql_request = f"SELECT id, login, superadmin FROM registeruser"
+        cur.execute(sql_request)
+        if cur.rowcount == 0:
+            return []
+        return cur.fetchall()
 
     def close_connection(self):
         self.conn.close()
