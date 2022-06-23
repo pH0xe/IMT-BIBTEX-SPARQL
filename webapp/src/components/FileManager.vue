@@ -229,16 +229,14 @@ getFiles();
 
 		<div class="has-text-centered">
 			<input id="upload-button" @change="postFile" type="file" accept=".bib" style="display: none">
-			<button class="button is-primary">
-				<label for="upload-button" style="cursor: pointer">
-					<span class="icon-text">
-						<span class="icon">
-							<i class="mdi mdi-24px mdi-upload" />
-						</span>
-						<span>Upload</span>
+			<label for="upload-button" class="button is-primary" style="cursor: pointer">
+				<span class="icon-text">
+					<span class="icon">
+						<i class="mdi mdi-24px mdi-upload" />
 					</span>
-				</label>
-			</button>
+					<span>Upload</span>
+				</span>
+			</label>
 		</div>
 	</section>
 </template>
