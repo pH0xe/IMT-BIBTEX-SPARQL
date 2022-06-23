@@ -61,19 +61,32 @@ async function connect(): Promise<void> {
 			</div>
 			<div class="field">
 				<label class="label">Login</label>
-				<div class="control">
+				<div class="control has-icons-left">
 					<input v-model="login" class="input" type="text" placeholder="Login">
+					<span class="icon is-left">
+						<i class="mdi mdi-identifier"></i>
+					</span>
 				</div>
 			</div>
 			<div class="field">
 				<label class="label">Password</label>
-				<div class="control">
+				<div class="control has-icons-left">
 					<input v-model="password" class="input" type="password" placeholder="Password">
+					<span class="icon is-left">
+						<i class="mdi mdi-key-variant"></i>
+					</span>
 				</div>
 			</div>
 			<div class="field">
-				<div class="control">
-					<button @click="connect" type="button" class="button is-primary">Log in</button>
+				<div class="control has-text-centered">
+					<button @click="connect" type="button" class="button is-primary">
+						<span class="icon-text">
+							<span class="icon">
+								<i class="mdi mdi-24px mdi-login-variant" />
+							</span>
+							<span>Log in</span>
+						</span>
+					</button>
 				</div>
 			</div>
 		</form>

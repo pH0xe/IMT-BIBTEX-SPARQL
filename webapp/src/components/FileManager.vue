@@ -32,6 +32,7 @@ function clearToken(): void {
 
 function getToken(): void {
 	token.value = sessionStorage.getItem("token");
+	getFiles();
 }
 
 async function getFiles(): Promise<void> {
@@ -119,80 +120,84 @@ async function deleteFile(id: number): Promise<void> {
 		});
 }
 
-getFiles();
+getToken();
 </script>
 
 <template>
-	<LoginForm @loggedIn="getToken" v-if="!hasToken" />
-	<section v-else class="section">
-		<h1 class="title has-text-centered">Bibtex files history</h1>
-		<div v-if="hasError" class="notification is-danger">
-			<p>
-				{{ errorMessage }}
-			</p>
-		</div>
+	<section class="section">
+		<div class="container is-max-desktop">
+			<LoginForm @loggedIn="getToken" v-if="!hasToken" />
+			<div v-else>
+				<h1 class="title has-text-centered">Bibtex files history</h1>
+				<div v-if="hasError" class="notification is-danger">
+					<p>
+						{{ errorMessage }}
+					</p>
+				</div>
 
-		<table v-if="items.length > 0" class="table container is-striped my-6">
-			<caption>Previous uploaded bibtex files</caption>
-			<thead>
-				<tr>
-					<th>
-						Name
-					</th>
-					<th>
-						Date
-					</th>
-					<th />
-				</tr>
-			</thead>
-			<tbody>
-				<tr v-for="(item, i) in items" key="i">
-					<td class="content-cell">
-						{{ item.name }}
-					</td>
-					<td class="content-cell">
-						{{ new Date(item.uploaddate * 1000).toLocaleString("fr") }}
-					</td>
-					<td>
-						<button @click="restoreFile(item.id)" class="button is-ghost">
+				<table v-if="items.length > 0" class="table is-striped is-fullwidth my-6">
+					<caption>Previous uploaded bibtex files</caption>
+					<thead>
+						<tr>
+							<th>
+								Name
+							</th>
+							<th>
+								Date
+							</th>
+							<th />
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="(item, i) in items" key="i">
+							<td class="content-cell">
+								{{ item.name }}
+							</td>
+							<td class="content-cell">
+								{{ new Date(item.uploaddate * 1000).toLocaleString("fr") }}
+							</td>
+							<td>
+								<button @click="restoreFile(item.id)" class="button is-ghost">
+									<span class="icon">
+										<i class="mdi mdi-24px mdi-restore" />
+									</span>
+								</button>
+								<button @click="deleteFile(item.id)" class="button is-ghost has-text-danger">
+									<span class="icon">
+										<i class="mdi mdi-24px mdi-delete" />
+									</span>
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<p v-else class="block is-size-4">
+					No bibtex file found. Upload one to parse it.
+				</p>
+
+				<div class="has-text-centered">
+					<input
+						id="upload-button"
+						@change="postFile"
+						type="file"
+						accept=".bib"
+						:disabled="isLoading"
+						style="display: none"
+					>
+					<label for="upload-button" class="button is-primary" :class="{ 'is-loading': isLoading }">
+						<span class="icon-text">
 							<span class="icon">
-								<i class="mdi mdi-24px mdi-restore" />
+								<i class="mdi mdi-24px mdi-upload" />
 							</span>
-						</button>
-						<button @click="deleteFile(item.id)" class="button is-ghost has-text-danger">
-							<span class="icon">
-								<i class="mdi mdi-24px mdi-delete" />
-							</span>
-						</button>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-
-		<p v-else class="block is-size-4">
-			No bibtex file found. Upload one to parse it.
-		</p>
-
-		<div class="has-text-centered">
-			<input
-				id="upload-button"
-				@change="postFile"
-				type="file"
-				accept=".bib"
-				:disabled="isLoading"
-				style="display: none"
-			>
-			<label for="upload-button" class="button is-primary" :class="{ 'is-loading': isLoading }">
-				<span class="icon-text">
-					<span class="icon">
-						<i class="mdi mdi-24px mdi-upload" />
-					</span>
-					<span>Upload</span>
-				</span>
-			</label>
-			<p v-if="isLoading" class="mt-2">
-				Converting bibtex file…
-			</p>
+							<span>Upload</span>
+						</span>
+					</label>
+					<p v-if="isLoading" class="mt-2">
+						Converting bibtex file…
+					</p>
+				</div>
+			</div>
 		</div>
 	</section>
 </template>

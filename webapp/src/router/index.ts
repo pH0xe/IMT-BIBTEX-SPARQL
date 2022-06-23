@@ -14,9 +14,9 @@ const routes = [
 		path: "/sparklis",
 		component: () => import("@/components/SparklisViewer.vue"),
 	}, {
-		name: "users",
-		path: "/users",
-		component: () => import("@/components/UserManager.vue"),
+		name: "account",
+		path: "/account",
+		component: () => import("@/components/AccountManager.vue"),
 	},
 ];
 

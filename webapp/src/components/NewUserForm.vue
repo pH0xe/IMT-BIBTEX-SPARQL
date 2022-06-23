@@ -76,61 +76,68 @@ async function postNewUser(): Promise<void> {
 </script>
 
 <template>
-	<section class="section">
-		<div v-if="hasError" class="notification is-danger">
-			<p>
-				{{ errorMessage }}
-			</p>
+	<div v-if="hasError" class="notification is-danger">
+		<p>
+			{{ errorMessage }}
+		</p>
+	</div>
+	<form name="New user" v-if="isAddingUser">
+		<h2 class="title is-5">New user</h2>
+		<div class="field">
+			<label class="label" for="new-user-login">Login</label>
+			<div class="control has-icons-left">
+				<input v-model="login" id="new-user-login" class="input" autocomplete="username" placeholder="Login">
+				<span class="icon is-left">
+					<i class="mdi mdi-identifier"></i>
+				</span>
+			</div>
 		</div>
-		<form name="New user" v-if="isAddingUser">
-			<h2 class="title is-5">New user</h2>
-			<div class="field">
-				<div class="control">
-					<label for="new-user-login">Login</label>
-					<input v-model="login" id="new-user-login" class="input" autocomplete="username" placeholder="Login">
-				</div>
+		<div class="field">
+			<label class="label" for="new-user-password">Password</label>
+			<div class="control has-icons-left">
+				<input v-model="password" id="new-user-password" class="input" type="password" autocomplete="new-password" placeholder="Password">
+				<span class="icon is-left">
+					<i class="mdi mdi-key-variant"></i>
+				</span>
 			</div>
-			<div class="field">
-				<div class="control">
-					<label for="new-user-password">Password</label>
-					<input v-model="password" id="new-user-password" class="input" type="password" autocomplete="new-password" placeholder="Password">
-				</div>
+		</div>
+		<div class="field">
+			<label class="label" for="new-user-password">Confirm password</label>
+			<div class="control has-icons-left">
+				<input v-model="confirmPassword" id="new-user-password" class="input" type="password" autocomplete="new-password" placeholder="Confirm password">
+				<span class="icon is-left">
+					<i class="mdi mdi-key-variant"></i>
+				</span>
 			</div>
-			<div class="field">
-				<div class="control">
-					<label for="new-user-password">Confirm password</label>
-					<input v-model="confirmPassword" id="new-user-password" class="input" type="password" autocomplete="new-password" placeholder="Confirm password">
-				</div>
-			</div>
-			<div class="field has-text-centered">
-				<button @click="cancelUserCreation" class="button is-ghost has-text-danger">
-					<span class="icon-text">
-						<span class="icon">
-							<i class="mdi mdi-24px mdi-cancel" />
-						</span>
-						<span>Cancel</span>
-					</span>
-				</button>
-				<button @click="postNewUser" type="button" class="button is-primary">
-					<span class="icon-text">
-						<span class="icon">
-							<i class="mdi mdi-24px mdi-check" />
-						</span>
-						<span>Confirm</span>
-					</span>
-				</button>
-			</div>
-		</form>
-		<div v-else class="has-text-centered">
-			<button @click="startUserCreation" class="button is-primary">
+		</div>
+		<div class="field has-text-centered">
+			<button @click="cancelUserCreation" class="button is-ghost has-text-danger">
 				<span class="icon-text">
 					<span class="icon">
-						<i class="mdi mdi-24px mdi-plus-circle" />
+						<i class="mdi mdi-24px mdi-cancel" />
 					</span>
-					<span>Add user</span>
+					<span>Cancel</span>
+				</span>
+			</button>
+			<button @click="postNewUser" type="button" class="button is-primary">
+				<span class="icon-text">
+					<span class="icon">
+						<i class="mdi mdi-24px mdi-check" />
+					</span>
+					<span>Confirm</span>
 				</span>
 			</button>
 		</div>
-	</section>
+	</form>
+	<div v-else class="has-text-centered">
+		<button @click="startUserCreation" class="button is-primary">
+			<span class="icon-text">
+				<span class="icon">
+					<i class="mdi mdi-24px mdi-plus-circle" />
+				</span>
+				<span>Add user</span>
+			</span>
+		</button>
+	</div>
 </template>
 

@@ -8,7 +8,10 @@ const toggle: any = ref(true);
 	<header>
 		<nav class="navbar is-primary" v-if="toggle">
 			<div class="navbar-brand">
-				<div class="navbar-item">
+				<div class="navbar-item mr-5">
+					<span class="icon is-large mb-1">
+						<i class="mdi mdi-script-text mdi-36px" />
+					</span>
 					<h1 class="title has-text-white">Bibtex parser</h1>
 				</div>
 				<router-link to="sparklis" class="navbar-item">
@@ -27,12 +30,12 @@ const toggle: any = ref(true);
 						<span>Files</span>
 					</span>
 				</router-link>
-				<router-link to="users" class="navbar-item">
+				<router-link to="account" class="navbar-item">
 					<span class="icon-text">
 						<span class="icon">
 							<i class="mdi mdi-24px mdi-account" />
 						</span>
-						<span>Users</span>
+						<span>Accounts</span>
 					</span>
 				</router-link>
 			</div>

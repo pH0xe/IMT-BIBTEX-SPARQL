@@ -78,68 +78,75 @@ async function updatePassword(): Promise<void> {
 </script>
 
 <template>
-	<section class="section">
-		<div v-if="!isUpdatingPassword">
-			<button @click="startPasswordUpdate" class="button is-primary">
-				<span class="icon-text">
-					<span class="icon">
-						<i class="mdi mdi-24px mdi-pencil" />
-					</span>
-					<span>Change password</span>
+	<div v-if="!isUpdatingPassword" class="has-text-centered">
+		<button @click="startPasswordUpdate" class="button is-primary">
+			<span class="icon-text">
+				<span class="icon">
+					<i class="mdi mdi-24px mdi-pencil" />
 				</span>
-			</button>
-			<p v-if="passwordUpdated" class="has-text-success">
-				<span class="icon-text">
-					<span class="icon">
-						<i class="mdi mdi-check" />
-					</span>
-					<span class="is-size-7">Password successfully updated</span>
+				<span>Change password</span>
+			</span>
+		</button>
+		<p v-if="passwordUpdated" class="has-text-success">
+			<span class="icon-text">
+				<span class="icon">
+					<i class="mdi mdi-check" />
 				</span>
+				<span class="is-size-7">Password successfully updated</span>
+			</span>
+		</p>
+	</div>
+	<form name="New password" v-else>
+		<div v-if="hasError" class="notification is-danger">
+			<p>
+				{{ errorMessage }}
 			</p>
 		</div>
-		<form name="New password" v-else>
-			<div v-if="hasError" class="notification is-danger">
-				<p>
-					{{ errorMessage }}
-				</p>
+		<h2 class="title is-5">Change password</h2>
+		<div class="field">
+			<label class="label" for="current-password">Current password</label>
+			<div class="control has-icons-left">
+				<input v-model="currentPassword" id="current-password" class="input" type="password" placeholder="Current password">
+				<span class="icon is-left">
+					<i class="mdi mdi-key-variant"></i>
+				</span>
 			</div>
-			<h2 class="title is-5">Change password</h2>
-			<div class="field">
-				<div class="control">
-					<label for="current-password">Current password</label>
-					<input v-model="currentPassword" id="current-password" class="input" type="password" placeholder="Current password">
-				</div>
+		</div>
+		<div class="field">
+			<label class="label" for="new-password">Password</label>
+			<div class="control has-icons-left">
+				<input v-model="newPassword" id="new-password" class="input" type="password" autocomplete="new-password" placeholder="Password">
+				<span class="icon is-left">
+					<i class="mdi mdi-key-variant"></i>
+				</span>
 			</div>
-			<div class="field">
-				<div class="control">
-					<label for="new-password">Password</label>
-					<input v-model="newPassword" id="new-password" class="input" type="password" autocomplete="new-password" placeholder="Password">
-				</div>
+		</div>
+		<div class="field">
+			<label class="label" for="new-password-confirm">Confirm password</label>
+			<div class="control has-icons-left">
+				<input v-model="confirmNewPassword" id="new-password-confirm" class="input" type="password" autocomplete="new-password" placeholder="Confirm password">
+				<span class="icon is-left">
+					<i class="mdi mdi-key-variant"></i>
+				</span>
 			</div>
-			<div class="field">
-				<div class="control">
-					<label for="new-password-confirm">Confirm password</label>
-					<input v-model="confirmNewPassword" id="new-password-confirm" class="input" type="password" autocomplete="new-password" placeholder="Confirm password">
-				</div>
-			</div>
-			<div class="field has-text-centered">
-				<button @click="stopPasswordUpdate" class="button is-ghost has-text-danger">
-					<span class="icon-text">
-						<span class="icon">
-							<i class="mdi mdi-24px mdi-cancel" />
-						</span>
-						<span>Cancel</span>
+		</div>
+		<div class="field has-text-centered">
+			<button @click="stopPasswordUpdate" class="button is-ghost has-text-danger">
+				<span class="icon-text">
+					<span class="icon">
+						<i class="mdi mdi-24px mdi-cancel" />
 					</span>
-				</button>
-				<button @click="updatePassword" type="button" class="button is-primary">
-					<span class="icon-text">
-						<span class="icon">
-							<i class="mdi mdi-24px mdi-check" />
-						</span>
-						<span>Confirm</span>
+					<span>Cancel</span>
+				</span>
+			</button>
+			<button @click="updatePassword" type="button" class="button is-primary">
+				<span class="icon-text">
+					<span class="icon">
+						<i class="mdi mdi-24px mdi-check" />
 					</span>
-				</button>
-			</div>
-		</form>
-	</section>
+					<span>Confirm</span>
+				</span>
+			</button>
+		</div>
+	</form>
 </template>
