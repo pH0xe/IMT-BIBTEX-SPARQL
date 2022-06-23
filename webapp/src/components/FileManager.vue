@@ -8,6 +8,8 @@ const API_PORT = "5000";
 const INVALID_PASSWORD_MESSAGE = "Invalid login or password.";
 const NETWORK_ERROR_MESSAGE = "Unable to reach server. Please check your connection.";
 
+const isLoading: Ref<boolean> = ref(false);
+
 const login: Ref<string> = ref("");
 const password: Ref<string> = ref("");
 
@@ -59,6 +61,7 @@ async function getFiles(): Promise<void> {
 
 async function postFile(event : Event & any): Promise<void> {
 	clearError();
+	isLoading.value = true;
 	await axios.post(
 		`http://${API_HOST}:${API_PORT}/api/bibtex`,
 		{
@@ -77,7 +80,8 @@ async function postFile(event : Event & any): Promise<void> {
 			} else {
 				errorMessage.value = NETWORK_ERROR_MESSAGE;
 			}
-		});
+		})
+		.finally(() => isLoading.value = false);
 }
 
 async function restoreFile(id: number): Promise<void> {
@@ -228,8 +232,15 @@ getFiles();
 		</p>
 
 		<div class="has-text-centered">
-			<input id="upload-button" @change="postFile" type="file" accept=".bib" style="display: none">
-			<label for="upload-button" class="button is-primary" style="cursor: pointer">
+			<input
+				id="upload-button"
+				@change="postFile"
+				type="file"
+				accept=".bib"
+				:disabled="isLoading"
+				style="display: none"
+			>
+			<label for="upload-button" class="button is-primary" :class="{ 'is-loading': isLoading }">
 				<span class="icon-text">
 					<span class="icon">
 						<i class="mdi mdi-24px mdi-upload" />
@@ -237,6 +248,9 @@ getFiles();
 					<span>Upload</span>
 				</span>
 			</label>
+			<p v-if="isLoading" class="mt-2">
+				Converting bibtex file…
+			</p>
 		</div>
 	</section>
 </template>
