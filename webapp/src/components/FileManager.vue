@@ -20,9 +20,14 @@ const errorMessage: Ref<string | undefined> = ref(undefined);
 const hasError: ComputedRef<boolean> = computed(() => errorMessage.value !== undefined);
 
 const items: Ref<any[]> = ref([]);
+const result: Ref<any[]> = ref([]);
 
 function clearError(): void {
 	errorMessage.value = undefined;
+}
+
+function clearResult(): void {
+	result.value = [];
 }
 
 function clearToken(): void {
@@ -70,7 +75,10 @@ async function postFile(event : Event & any): Promise<void> {
 			},
 		}
 	)
-		.then(() => getFiles())
+		.then((response) => {
+			getFiles();
+			result.value = response.data.warnings;
+		})
 		.catch((error) => {
 			if (error.response.status === 403) {
 				clearToken();
@@ -83,6 +91,7 @@ async function postFile(event : Event & any): Promise<void> {
 
 async function restoreFile(id: number): Promise<void> {
 	clearError();
+	isLoading.value = true;
 	await axios.post(
 		`http://${API_HOST}:${API_PORT}/api/bibtex/${id}`,
 		{},
@@ -92,14 +101,18 @@ async function restoreFile(id: number): Promise<void> {
 			},
 		}
 	)
-		.then(() => getFiles())
+		.then((response) => {
+			getFiles();
+			result.value = response.data.warnings;
+		})
 		.catch((error) => {
 			if (error.response.status === 403) {
 				clearToken();
 			} else {
 				errorMessage.value = NETWORK_ERROR_MESSAGE;
 			}
-		});
+		})
+		.finally(() => isLoading.value = false);
 }
 
 async function deleteFile(id: number): Promise<void> {
@@ -157,7 +170,7 @@ getToken();
 								{{ new Date(item.uploaddate * 1000).toLocaleString("fr") }}
 							</td>
 							<td>
-								<button @click="restoreFile(item.id)" class="button is-ghost">
+								<button @click="restoreFile(item.id)" class="button is-ghost" :disabled="isLoading">
 									<span class="icon">
 										<i class="mdi mdi-24px mdi-restore" />
 									</span>
@@ -176,7 +189,7 @@ getToken();
 					No bibtex file found. Upload one to parse it.
 				</p>
 
-				<div class="has-text-centered">
+				<div class="has-text-centered block">
 					<input
 						id="upload-button"
 						@change="postFile"
@@ -196,6 +209,24 @@ getToken();
 					<p v-if="isLoading" class="mt-2">
 						Converting bibtex file…
 					</p>
+				</div>
+
+				<div v-if="result.length > 0" class="panel is-warning mt-6">
+					<p class="panel-heading has-text-centered">
+						<span class="icon-text">
+							<span class="icon">
+								<i class="mdi mdi-alert" />
+							</span>
+							<span>Warnings</span>
+							<span class="icon" />
+						</span>
+					</p>
+					<div v-for="(warning, i) in result" :key="i" class="panel-block">
+						<span class="panel-icon">
+							<i class="mdi mdi-minus" />
+						</span>
+						{{ warning }}
+					</div>
 				</div>
 			</div>
 		</div>
