@@ -35,14 +35,10 @@ select {
     pointer-events: none;
 }
 
-.affix {
-    top: 0;
-    width: 100%;
-    z-index: 9999 !important;
-}
-
 .navbar {
     margin: 0;
+	margin-top: 2rem;
+	padding: 0 50px;
 }
 
 .texte {
@@ -359,6 +355,8 @@ th, td {
 
 footer {
     clear:both;
+	padding: 50px;
+	margin-bottom: 1rem;
 }
 
 /* examples */
@@ -427,4 +425,18 @@ input:checked + .slider:before {
 /* Modification de l'interface, display: none des éléments non nécessaire */
 #permalink {
     display: none !important;
+}
+
+.container-fluid {
+	padding-right: 50px;
+	padding-left: 50px;
+}
+
+.btn-primary {
+	background: #00d1b2;
+	border: none;
+}
+
+.btn-primary:hover {
+	background: #00b89c;
 }
