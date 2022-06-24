@@ -4,8 +4,8 @@ import { computed, ComputedRef, ref, Ref } from "vue";
 
 const emit = defineEmits(["loggedIn"]);
 
-const API_HOST = "localhost";
-const API_PORT = "5000";
+const API_HOST = import.meta.env.API_HOST;
+const API_PORT = import.meta.env.API_PORT;
 
 const INVALID_LOGIN_OR_PASSWORD_MESSAGE = "Invalid login or password.";
 const NETWORK_ERROR_MESSAGE = "Unable to reach server. Please check your connection.";
@@ -21,24 +21,24 @@ function clearError(): void {
 }
 
 async function connect(): Promise<void> {
- 	await axios.post(
- 		`http://${API_HOST}:${API_PORT}/api/auth/login`,
- 		{
- 			login: login.value,
- 			password: password.value,
- 		}, {
+	await axios.post(
+		`http://${API_HOST}:${API_PORT}/api/auth/login`,
+		{
+			login: login.value,
+			password: password.value,
+		}, {
 			headers: { "Content-Type": "multipart/form-data" },
 		}
- 	)
- 		.then((response) => {
+	)
+		.then((response) => {
 			clearError();
 
 			sessionStorage.setItem("token", response.data.token);
 			sessionStorage.setItem("login", login.value);
 
 			emit("loggedIn");
- 		})
- 		.catch((error) => {
+		})
+		.catch((error) => {
 			if (error.response.status == 401) {
 				errorMessage.value = INVALID_LOGIN_OR_PASSWORD_MESSAGE;
 				password.value = "";
@@ -51,40 +51,42 @@ async function connect(): Promise<void> {
 
 <template>
 	<section class="section">
-		<h2 class="title is-5 has-text-centered">Authentification</h2>
+		<h2 class="title is-5 has-text-centered">
+			{{ $t("Authentification") }}
+		</h2>
 
 		<form name="login">
 			<div v-if="hasError" class="notification is-danger is-light">
 				<p>
-					{{ errorMessage }}
+					{{ $t(errorMessage) }}
 				</p>
 			</div>
 			<div class="field">
-				<label class="label">Login</label>
+				<label class="label">{{ $t("Login") }}</label>
 				<div class="control has-icons-left">
-					<input v-model="login" class="input" type="text" placeholder="Login">
+					<input v-model="login" class="input" type="text" :placeholder="$t('Login')">
 					<span class="icon is-left">
-						<i class="mdi mdi-identifier"></i>
+						<i class="mdi mdi-identifier" />
 					</span>
 				</div>
 			</div>
 			<div class="field">
-				<label class="label">Password</label>
+				<label class="label">{{ $t("Password") }}</label>
 				<div class="control has-icons-left">
-					<input v-model="password" class="input" type="password" placeholder="Password">
+					<input v-model="password" class="input" type="password" :placeholder="$t('Password')">
 					<span class="icon is-left">
-						<i class="mdi mdi-key-variant"></i>
+						<i class="mdi mdi-key-variant" />
 					</span>
 				</div>
 			</div>
 			<div class="field">
 				<div class="control has-text-centered">
-					<button @click="connect" type="button" class="button is-primary">
+					<button class="button is-primary" type="button" @click="connect">
 						<span class="icon-text">
 							<span class="icon">
 								<i class="mdi mdi-24px mdi-login-variant" />
 							</span>
-							<span>Log in</span>
+							<span>{{ $t("Log in") }}</span>
 						</span>
 					</button>
 				</div>

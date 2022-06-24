@@ -17,6 +17,10 @@ const routes = [
 		name: "account",
 		path: "/account",
 		component: () => import("@/components/AccountManager.vue"),
+	}, {
+		name: "help",
+		path: "/help",
+		component: () => import("@/components/HelpProvider.vue"),
 	},
 ];
 

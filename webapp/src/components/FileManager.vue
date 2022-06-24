@@ -3,15 +3,12 @@ import axios from "axios";
 import { computed, ComputedRef, ref, Ref } from "vue";
 import LoginForm from "@/components/LoginForm.vue";
 
-const API_HOST = "localhost";
-const API_PORT = "5000";
+const API_HOST = import.meta.env.API_HOST;
+const API_PORT = import.meta.env.API_PORT;
 
 const NETWORK_ERROR_MESSAGE = "Unable to reach server. Please check your connection.";
 
 const isLoading: Ref<boolean> = ref(false);
-
-const login: Ref<string> = ref("");
-const password: Ref<string> = ref("");
 
 const token: Ref<string | null> = ref(sessionStorage.getItem("token"));
 const hasToken: ComputedRef<boolean> = computed(() => token.value !== null);
@@ -24,10 +21,6 @@ const result: Ref<any[]> = ref([]);
 
 function clearError(): void {
 	errorMessage.value = undefined;
-}
-
-function clearResult(): void {
-	result.value = [];
 }
 
 function clearToken(): void {
@@ -64,10 +57,16 @@ async function getFiles(): Promise<void> {
 async function postFile(event : Event & any): Promise<void> {
 	clearError();
 	isLoading.value = true;
+
+	if (!event.target) {
+		console.error("Attempt to post file but event has no “target” attribute.");
+		return;
+	}
+
 	await axios.post(
 		`http://${API_HOST}:${API_PORT}/api/bibtex`,
 		{
-			file: event.target!.files[0],
+			file: event.target.files[0],
 		}, {
 			headers: {
 				"Content-Type": "multipart/form-data",
@@ -139,30 +138,34 @@ getToken();
 <template>
 	<section class="section">
 		<div class="container is-max-desktop">
-			<LoginForm @loggedIn="getToken" v-if="!hasToken" />
+			<LoginForm v-if="!hasToken" @logged-in="getToken" />
 			<div v-else>
-				<h1 class="title has-text-centered">Bibtex files history</h1>
+				<h1 class="title has-text-centered">
+					{{ $t("Bibtex files history") }}
+				</h1>
 				<div v-if="hasError" class="notification is-danger">
 					<p>
-						{{ errorMessage }}
+						{{ $t(errorMessage) }}
 					</p>
 				</div>
 
 				<table v-if="items.length > 0" class="table is-striped is-fullwidth my-6">
-					<caption>Previous uploaded bibtex files</caption>
+					<caption class="is-hidden">
+						{{ $t("Previous uploaded bibtex files") }}
+					</caption>
 					<thead>
 						<tr>
 							<th>
-								Name
+								{{ $t("Name") }}
 							</th>
 							<th>
-								Date
+								{{ $t("Date") }}
 							</th>
 							<th />
 						</tr>
 					</thead>
 					<tbody>
-						<tr v-for="(item, i) in items" key="i">
+						<tr v-for="(item, i) in items" :key="i">
 							<td class="content-cell">
 								{{ item.name }}
 							</td>
@@ -170,12 +173,12 @@ getToken();
 								{{ new Date(item.uploaddate * 1000).toLocaleString("fr") }}
 							</td>
 							<td>
-								<button @click="restoreFile(item.id)" class="button is-ghost" :disabled="isLoading">
+								<button class="button is-ghost" :disabled="isLoading" @click="restoreFile(item.id)">
 									<span class="icon">
 										<i class="mdi mdi-24px mdi-restore" />
 									</span>
 								</button>
-								<button @click="deleteFile(item.id)" class="button is-ghost has-text-danger">
+								<button class="button is-ghost has-text-danger" @click="deleteFile(item.id)">
 									<span class="icon">
 										<i class="mdi mdi-24px mdi-delete" />
 									</span>
@@ -186,28 +189,28 @@ getToken();
 				</table>
 
 				<p v-else class="block is-size-4">
-					No bibtex file found. Upload one to parse it.
+					{{ $t("No bibtex file found. Upload one to parse it.") }}
 				</p>
 
 				<div class="has-text-centered block">
 					<input
 						id="upload-button"
-						@change="postFile"
+						style="display: none"
 						type="file"
 						accept=".bib"
 						:disabled="isLoading"
-						style="display: none"
+						@change="postFile"
 					>
 					<label for="upload-button" class="button is-primary" :class="{ 'is-loading': isLoading }">
 						<span class="icon-text">
 							<span class="icon">
 								<i class="mdi mdi-24px mdi-upload" />
 							</span>
-							<span>Upload</span>
+							<span>{{ $t("Upload") }}</span>
 						</span>
 					</label>
 					<p v-if="isLoading" class="mt-2">
-						Converting bibtex file…
+						{{ $t("Converting bibtex file…") }}
 					</p>
 				</div>
 
@@ -217,7 +220,7 @@ getToken();
 							<span class="icon">
 								<i class="mdi mdi-alert" />
 							</span>
-							<span>Warnings</span>
+							<span>{{ $t("Warnings") }}</span>
 							<span class="icon" />
 						</span>
 					</p>
