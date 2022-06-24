@@ -4,8 +4,8 @@ import { computed, ComputedRef, ref, Ref } from "vue";
 
 const emit = defineEmits(["loggedIn"]);
 
-const API_HOST = import.meta.env.API_HOST;
-const API_PORT = import.meta.env.API_PORT;
+const API_HOST = "localhost";
+const API_PORT = 5000;
 
 const INVALID_LOGIN_OR_PASSWORD_MESSAGE = "Invalid login or password.";
 const NETWORK_ERROR_MESSAGE = "Unable to reach server. Please check your connection.";
@@ -39,6 +39,7 @@ async function connect(): Promise<void> {
 			emit("loggedIn");
 		})
 		.catch((error) => {
+			console.log(error);
 			if (error.response.status == 401) {
 				errorMessage.value = INVALID_LOGIN_OR_PASSWORD_MESSAGE;
 				password.value = "";

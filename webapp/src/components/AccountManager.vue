@@ -5,8 +5,8 @@ import PasswordManager from "@/components/PasswordManager.vue";
 import NewUserForm from "@/components/NewUserForm.vue";
 import LoginForm from "@/components/LoginForm.vue";
 
-const API_HOST = import.meta.env.API_HOST;
-const API_PORT = import.meta.env.API_PORT;
+const API_HOST = "localhost";
+const API_PORT = 5000;
 
 const NETWORK_ERROR_MESSAGE = "Unable to reach server. Please check your connection.";
 

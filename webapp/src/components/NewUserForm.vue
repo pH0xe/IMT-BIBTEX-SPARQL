@@ -5,8 +5,8 @@ import { computed, ComputedRef, ref, Ref } from "vue";
 const emit = defineEmits(["invalidToken", "newUser"]);
 const props = defineProps<{ token: string }>();
 
-const API_HOST = import.meta.env.API_HOST;
-const API_PORT = import.meta.env.API_PORT;
+const API_HOST = "localhost";
+const API_PORT = 5000;
 
 const EMPTY_PASSWORD_MESSAGE = "Password must not be empty.";
 const NETWORK_ERROR_MESSAGE = "Unable to reach server. Please check your connection.";
