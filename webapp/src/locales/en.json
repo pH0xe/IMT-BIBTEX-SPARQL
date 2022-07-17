@@ -20,6 +20,8 @@
 	"Do research": "Do research",
 	"Each file loading erases the previous data.": "Each file loading erases the previous data.",
 	"Entered password are not equal": "Entered password are not equal",
+	"Error while parsing file: invalid format.": "Error while parsing file: invalid format.",
+	"Errors": "Errors",
 	"explains how to use the tool.": "explains how to use the tool.",
 	"Files": "Files",
 	"Finally, online files deletion is possible but definitive.": "Finally, online files deletion is possible but definitive.",

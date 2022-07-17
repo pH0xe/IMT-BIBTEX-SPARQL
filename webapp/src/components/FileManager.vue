@@ -6,6 +6,7 @@ import LoginForm from "@/components/LoginForm.vue";
 const API_HOST = "localhost";
 const API_PORT = 5000;
 
+const INVALID_FILE_ERROR = "Error while parsing file: invalid format.";
 const NETWORK_ERROR_MESSAGE = "Unable to reach server. Please check your connection.";
 
 const isLoading: Ref<boolean> = ref(false);
@@ -46,7 +47,6 @@ async function getFiles(): Promise<void> {
 			response.data.forEach((item: any) => items.value.push(item));
 		})
 		.catch((error) => {
-			console.log(error);
 			if (error.response.status === 403) {
 				clearToken();
 			} else {
@@ -82,6 +82,10 @@ async function postFile(event : Event & any): Promise<void> {
 		.catch((error) => {
 			if (error.response.status === 403) {
 				clearToken();
+			} else if (error.response.status === 418) {
+				errorMessage.value = INVALID_FILE_ERROR;
+				console.log(error);
+				result.value = [error.response.data.message];
 			} else {
 				errorMessage.value = NETWORK_ERROR_MESSAGE;
 			}
@@ -215,13 +219,18 @@ getToken();
 					</p>
 				</div>
 
-				<div v-if="result.length > 0" class="panel is-warning mt-6">
+				<div
+					v-if="result.length > 0"
+					class="panel mt-6"
+					:class="hasError ? 'is-danger' : 'is-warning'"
+				>
 					<p class="panel-heading has-text-centered">
 						<span class="icon-text">
 							<span class="icon">
 								<i class="mdi mdi-alert" />
 							</span>
-							<span>{{ $t("Warnings") }}</span>
+							<span v-if="hasError">{{ $t("Errors") }}</span>
+							<span v-else>{{ $t("Warnings") }}</span>
 							<span class="icon" />
 						</span>
 					</p>
