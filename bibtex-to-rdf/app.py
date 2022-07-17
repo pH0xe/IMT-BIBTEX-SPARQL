@@ -124,7 +124,7 @@ def update_fuseki(graph_data: str):
 
 def return_error(msg, code, method=None):
     logger.error(f'{msg} {method}')
-    return jsonify({'message': msg}), code
+    return jsonify({'message': msg}), code, None
 
 def create_app():
 	return app

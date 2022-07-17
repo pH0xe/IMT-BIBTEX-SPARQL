@@ -20,6 +20,8 @@
 	"Do research": "Faire des recherches",
 	"Each file loading erases the previous data.": "Chaque chargement de fichier écrases les données précédentes.",
 	"Entered password are not equal": "Les mots de passe saisis ne sont pas les mêmes.",
+	"Error while parsing file: invalid format.": "Erreur durant le traitement du fichier : format invalide.",
+	"Errors": "Erreurs",
 	"explains how to use the tool.": "explique comment utiliser l’outil.",
 	"Files": "Fichiers",
 	"Finally, online files deletion is possible but definitive.": "Enfin, la suppression de fichiers mis en ligne est possible mais définitive.",
